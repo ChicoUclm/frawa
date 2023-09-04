@@ -1,4 +1,5 @@
 import 'package:excursiona/helper/helper_functions.dart';
+import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/services/notification_service.dart';
 import 'package:excursiona/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,8 +16,9 @@ class AuthService {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
               email: email, password: password))
           .user!;
-      await UserService(uid: user.uid).saveUserData(name, email);
-      NotificationService().initializeNotificationService();
+      var userModel = UserModel(uid: user.uid, name: name, email: email);
+      await UserService(uid: user.uid).saveUserData(userModel);
+      // NotificationService().initializeNotificationService();
       if (user != null) {
         result = true;
       }
@@ -49,7 +51,7 @@ class AuthService {
         QuerySnapshot snapshot =
             await UserService(uid: firebaseAuth.currentUser!.uid)
                 .getUserDataByEmail(email);
-        NotificationService().initializeNotificationService();
+        // NotificationService().initializeNotificationService();
         return snapshot.docs[0];
       }
     } on FirebaseException catch (e) {
@@ -73,14 +75,18 @@ class AuthService {
       User? user = userCredential.user;
       if (user != null) {
         if (userCredential.additionalUserInfo!.isNewUser) {
-          await UserService(uid: user.uid)
-              .saveUserData(user.displayName!, user.email!, user.photoURL!);
+          var userModel = UserModel(
+              uid: user.uid,
+              name: user.displayName!,
+              email: user.email!,
+              profilePic: user.photoURL!);
+          await UserService(uid: user.uid).saveUserData(userModel);
         }
       }
       QuerySnapshot snapshot =
           await UserService(uid: firebaseAuth.currentUser!.uid)
               .getUserDataByEmail(user!.email!);
-      NotificationService().initializeNotificationService();
+      // NotificationService().initializeNotificationService();
       return snapshot.docs[0];
       // } on FirebaseAuthException catch (e) {
       //   return e.message;

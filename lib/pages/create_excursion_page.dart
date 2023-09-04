@@ -1,4 +1,4 @@
-import 'package:excursiona/constants/assets.dart';
+import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/controllers/user_controller.dart';
 import 'package:excursiona/model/excursion.dart';
@@ -10,7 +10,6 @@ import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/widgets/add_participant_avatar.dart';
 import 'package:excursiona/widgets/form_button.dart';
 import 'package:excursiona/widgets/participant_avatar.dart';
-import 'package:excursiona/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
@@ -48,10 +47,11 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
 
   _addParticipants() async {
     WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
-    Set<UserModel> result = await nextScreen(
+    Set<UserModel>? result = await nextScreen(
         context,
         SearchParticipantsPage(alreadyParticipants: _participants),
         PageTransitionType.rightToLeftWithFade);
+    if (result == null) return;
     setState(() {
       _participants.addAll(result);
     });
@@ -66,9 +66,9 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
 
   _showLoadingDialog() {
     showDialog(
-        barrierColor: const Color(0xFFFAFAFA).withOpacity(0.8),
-        context: context,
+        barrierColor: Constants.darkWhite.withOpacity(0.8),
         barrierDismissible: false,
+        context: context,
         builder: (context) {
           return Scaffold(
               backgroundColor: Colors.transparent,
@@ -104,7 +104,6 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
       ownerName: currentUser!.name,
       ownerPic: currentUser!.profilePic,
       id: const Uuid().v4(),
-      nParticipants: _participants.length,
       date: DateTime.now(),
       title: _excursionName,
       description: _description,
@@ -119,11 +118,13 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
       showSnackBar(context, Colors.red, "Hubo un error al crear la excursión");
     } else {
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
       showSnackBar(context, Colors.green, "Excursión creada con éxito");
-      nextScreen(
+      nextScreenReplace(
           context,
           ExcursionPage(
             excursionId: excursion.id,
+            excursion: excursion,
             participants: _participants,
           ),
           PageTransitionType.fade);
@@ -134,8 +135,8 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Crear excursión",
-            style: TextStyle(color: Colors.black)),
+        title: Text("Crear excursión", style: GoogleFonts.inter()),
+        foregroundColor: Colors.black,
         backgroundColor: const Color(0xFFFAFAFA),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -183,11 +184,11 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                const Text(
+                Text(
                   "Participantes",
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -197,16 +198,9 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                    border: Constants.border,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                    boxShadow: Constants.boxShadow,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

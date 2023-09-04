@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:excursiona/controllers/user_controller.dart';
-import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/widgets/account_avatar.dart';
-import 'package:excursiona/widgets/widgets.dart';
+import 'package:excursiona/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchParticipantsPage extends StatefulWidget {
   final Set<UserModel> alreadyParticipants;
@@ -19,6 +19,7 @@ class SearchParticipantsPage extends StatefulWidget {
 
 class _SearchParticipantsPageState extends State<SearchParticipantsPage> {
   bool _isLoading = false;
+  Set<UserModel> get _alreadyParticipants => widget.alreadyParticipants;
   final Set<UserModel> _participants = {};
   List<UserModel> _searchResults = [];
   final TextEditingController _textController = TextEditingController();
@@ -28,14 +29,18 @@ class _SearchParticipantsPageState extends State<SearchParticipantsPage> {
   @override
   void initState() {
     super.initState();
-    _isLoading = true;
     setState(() {
       _participants.addAll(widget.alreadyParticipants);
     });
-    _fetchUsers();
   }
 
   _fetchUsers() async {
+    if (_textController.text.isEmpty) {
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
     var results = await _userController
         .getAllUsersBasicInfo(_textController.text.toLowerCase());
     results = results
@@ -79,6 +84,7 @@ class _SearchParticipantsPageState extends State<SearchParticipantsPage> {
               const SizedBox(width: 16),
               Expanded(
                 child: TextField(
+                  autofocus: true,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Buscar",
@@ -132,11 +138,11 @@ class _SearchParticipantsPageState extends State<SearchParticipantsPage> {
                           : CircleAvatar(
                               radius: 30,
                               backgroundColor: Colors.transparent,
-                              // backgroundImage: CachedNetworkImageProvider(
-                              //     _searchResults[index].profilePic),
                               child: CachedNetworkImage(
                                 imageUrl: _searchResults[index].profilePic,
                                 placeholder: (context, url) => const Loader(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                                 placeholderFadeInDuration:
                                     const Duration(milliseconds: 300),
                                 imageBuilder: (context, imageProvider) =>

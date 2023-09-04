@@ -1,38 +1,26 @@
-import 'package:excursiona/enums/message_enums.dart';
-import 'package:excursiona/model/chat_contact.dart';
-import 'package:excursiona/model/contact.dart';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excursiona/model/excursion.dart';
-import 'package:excursiona/model/invitation.dart';
-import 'package:excursiona/model/message.dart';
+import 'package:excursiona/model/image_model.dart';
+import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/services/auth_service.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/widgets/widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+import 'package:excursiona/services/excursion_service.dart';
+import 'package:excursiona/services/storage_service.dart';
 
 class UserService {
   UserService({this.uid});
   AuthService authService = AuthService();
 
   final String? uid;
-  // collection reference
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference imagesCollection =
+      FirebaseFirestore.instance.collection('images');
 
-  ///
-  /// FUNCIONALIDAD DE USUARIOS
-  ///
-  Future saveUserData(String name, String email, [String photoUrl = '']) async {
-    return await userCollection.doc(uid).set({
-      'uid': uid,
-      'name': name,
-      'email': email,
-      'profilePic': photoUrl,
-      'contacts': [],
-    });
+  Future saveUserData(UserModel user) async {
+    return await userCollection.doc(uid).set(user.toMap());
   }
 
   Future getUserDataByEmail(String email) async {
@@ -45,184 +33,55 @@ class UserService {
     }
   }
 
-  Stream<UserModel> getUserDataByID(String userId) {
-    return userCollection.doc(userId).snapshots().map(
-        (event) => UserModel.fromMap(event.data()! as Map<String, dynamic>));
-  }
-
-  Future<UserModel> getFutureUserDataByID(String userId) async {
-    var userData = await userCollection.doc(userId).get();
-    return UserModel.fromMap(userData.data()! as Map<String, dynamic>);
-  }
-
-  Future<UserModel?> getCurrentUserData() async {
-    var userData =
-        await userCollection.doc(FirebaseAuth.instance.currentUser?.uid).get();
-    UserModel? user;
-    if (userData.data() != null) {
-      user = UserModel.fromMap(userData.data()! as Map<String, dynamic>);
+  getUserData() async {
+    try {
+      var snapshot = await userCollection
+          .doc(authService.firebaseAuth.currentUser?.uid)
+          .get();
+      return UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
     }
-    return user;
   }
 
-  Future insertExcursionInvitation(Invitation invitation, String userId) async {
+  Future insertExcursionInvitation(Excursion invitation, String userId) async {
     try {
       await userCollection
           .doc(userId)
           .collection('invitations')
-          .doc(invitation.excursionId)
+          .doc(invitation.id)
           .set(invitation.toMap());
     } on FirebaseException {
       rethrow;
     }
   }
 
-  Future deleteExcursionInvitation(String excursionId, String userId) async {
+  Future deleteExcursionInvitation(String excursionId) async {
     try {
+      var currentUserId = authService.firebaseAuth.currentUser!.uid;
       await userCollection
-          .doc(userId)
+          .doc(currentUserId)
           .collection('invitations')
           .doc(excursionId)
           .delete();
-    } on FirebaseException {
-      rethrow;
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
-  Stream<List<Invitation>> getExcursionInvitations() {
+  Stream<List<Excursion>> getExcursionInvitations() {
     String userId = authService.firebaseAuth.currentUser!.uid;
     return userCollection
         .doc(userId)
         .collection('invitations')
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Invitation.fromMap(doc.data()))
-          .toList();
-    });
-  }
-
-  /// ------------------- CHAT ------------------- ///
-  void _saveMessageToContactsSubcollection(
-      UserModel senderUserData,
-      UserModel recieverUserData,
-      String text,
-      DateTime timeSent,
-      String recieverUserID) async {
-    // SAVE THE MESSAGE TO THE reciever'S CHAT COLLECTION
-    var recieverChatContact = ChatContact(
-        name: senderUserData.name,
-        profilePic: senderUserData.profilePic,
-        contactID: senderUserData.uid,
-        timeSent: timeSent,
-        lastMessage: text);
-
-    await userCollection
-        .doc(recieverUserID)
-        .collection('chats')
-        .doc(authService.firebaseAuth.currentUser!.uid)
-        .set(recieverChatContact.toMap());
-
-    // SAVE THE MESSAGE TO THE SENDER'S CHAT COLLECTION
-
-    var senderChatContact = ChatContact(
-        name: recieverUserData.name,
-        profilePic: recieverUserData.profilePic,
-        contactID: recieverUserData.uid,
-        timeSent: timeSent,
-        lastMessage: text);
-
-    await userCollection
-        .doc(authService.firebaseAuth.currentUser!.uid)
-        .collection('chats')
-        .doc(recieverUserID)
-        .set(senderChatContact.toMap());
-  }
-
-  void _saveMessageToMessageSubcollection(
-      String recieverUserID,
-      // String senderUserID,
-      String senderUserName,
-      String reciverUserName,
-      String text,
-      DateTime timeSent,
-      String messageID,
-      MessageEnum messageType) async {
-    var message = Message(
-        senderID: authService.firebaseAuth.currentUser!.uid,
-        recieverID: recieverUserID,
-        text: text,
-        timeSent: timeSent,
-        type: messageType,
-        messageID: messageID,
-        isRead: false);
-
-    //SAVE THE MESSAGE TO THE SENDER'S MESSAGE COLLECTION (OUR MESSAGE)
-    await userCollection
-        .doc(authService.firebaseAuth.currentUser!.uid)
-        .collection('chats')
-        .doc(recieverUserID)
-        .collection('messages')
-        .doc(messageID)
-        .set(message.toMap());
-
-    //SAVE THE MESSAGE TO THE RECEIVERS'S MESSAGE COLLECTION (OTHER'S MESSAGE)
-    await userCollection
-        .doc(recieverUserID)
-        .collection('chats')
-        .doc(authService.firebaseAuth.currentUser!.uid)
-        .collection('messages')
-        .doc(messageID)
-        .set(message.toMap());
-  }
-
-  void sendTextMessage(
-      {required BuildContext context,
-      required String text,
-      required String recieverUserID}) async {
-    try {
-      var timeSent = DateTime.now();
-      UserModel recieverUserData;
-      // User recieverUserData = getUserDataByID(recieverUserID) as User;
-
-      var recieverUserDataMap = await userCollection.doc(recieverUserID).get();
-      recieverUserData = UserModel.fromMap(
-          recieverUserDataMap.data()! as Map<String, dynamic>);
-
-      var messageID = const Uuid().v1();
-
-      UserModel senderUserData = await getCurrentUserData() as UserModel;
-
-      _saveMessageToContactsSubcollection(
-          senderUserData, recieverUserData, text, timeSent, recieverUserID);
-
-      _saveMessageToMessageSubcollection(recieverUserID, senderUserData.name,
-          recieverUserData.name, text, timeSent, messageID, MessageEnum.text);
-    } catch (e) {
-      showSnackBar(context, Theme.of(context).primaryColor, e.toString());
-    }
-  }
-
-  Stream<List<Message>> getUserMessages(String receiverUserId) {
-    return userCollection
-        .doc(authService.firebaseAuth.currentUser!.uid)
-        .collection('chats')
-        .doc(receiverUserId)
-        .collection('messages')
-        .orderBy('timeSent')
-        .snapshots()
-        .map((event) {
-      List<Message> messages = [];
-      for (var doc in event.docs) {
-        messages.add(Message.fromMap(doc.data()));
-      }
-      return messages;
+      return snapshot.docs.map((doc) => Excursion.fromMap(doc.data())).toList();
     });
   }
 
   Future<List<UserModel>> getAllUsersBasicInfo(String name) async {
-    //if a name is given filter by name
-    //if no name is given return all users
     List<UserModel> users = [];
     QuerySnapshot snapshot =
         await userCollection.orderBy('name').limit(25).get();
@@ -232,5 +91,183 @@ class UserService {
       }
     }
     return users;
+  }
+
+  saveExcursion(ExcursionRecap excursion, File mapSnapshot) async {
+    String mapUrl = await StorageService().uploadMapSnapshot(
+        excursion.id, mapSnapshot, authService.firebaseAuth.currentUser!.uid);
+    if (mapUrl.isNotEmpty) {
+      excursion.mapSnapshotUrl = mapUrl;
+      try {
+        await ExcursionService().saveExcursionToTL(excursion);
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<List<QueryDocumentSnapshot>> getUserExcursions(
+      int docsPerPage, QueryDocumentSnapshot? lastDoc) async {
+    var userId = authService.firebaseAuth.currentUser!.uid;
+    try {
+      CollectionReference tlCollection =
+          FirebaseFirestore.instance.collection('timeline');
+      var data = lastDoc == null
+          ? await tlCollection
+              .where('userId', isEqualTo: userId)
+              .orderBy('date', descending: true)
+              .limit(docsPerPage)
+              .get()
+          : await tlCollection
+              .where('userId', isEqualTo: userId)
+              .orderBy('date', descending: true)
+              .startAfterDocument(lastDoc)
+              .limit(docsPerPage)
+              .get();
+      return data.docs;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  updateProfilePic(String url) async {
+    try {
+      await userCollection
+          .doc(authService.firebaseAuth.currentUser!.uid)
+          .update({'profilePic': url});
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void updateUserStatistics(StatisticRecap statistics) {
+    final DocumentReference userRef =
+        userCollection.doc(authService.firebaseAuth.currentUser!.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      final DocumentSnapshot snapshot = await transaction.get(userRef);
+
+      if (snapshot.exists) {
+        var data = snapshot.data()! as Map<String, dynamic>;
+        final currentKilometers = data['totalDistance'] ?? 0.0;
+        final newKilometers = currentKilometers + statistics.distance;
+
+        final currentExcursions = data['nExcursions'] ?? 0;
+        final newExcursions = currentExcursions + 1;
+
+        final currentTime = Duration(minutes: data['totalTime'] ?? 00);
+        final newTime = currentTime + statistics.duration;
+
+        final currentAvgSpeed = data['avgSpeed'] ?? 0.0;
+        double newSum =
+            currentAvgSpeed * currentExcursions + statistics.avgSpeed;
+        final newAvgSpeed = newSum / newExcursions;
+
+        transaction.update(userRef, {
+          'totalDistance': newKilometers,
+          'nExcursions': newExcursions,
+          'totalTime': newTime.inMinutes,
+          'avgSpeed': newAvgSpeed
+        });
+      }
+    });
+  }
+
+  void updateUserPhotos(int nNewPhotos, List<ImageModel> uploadedImages) {
+    final DocumentReference userRef =
+        userCollection.doc(authService.firebaseAuth.currentUser!.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      final DocumentSnapshot snapshot = await transaction.get(userRef);
+
+      if (snapshot.exists) {
+        var data = snapshot.data()! as Map<String, dynamic>;
+        int currentPhotos = data['nPhotos'] ?? 0;
+        int newPhotos = currentPhotos + nNewPhotos;
+
+        transaction.update(userRef, {
+          'nPhotos': newPhotos,
+        });
+      }
+    }).catchError((error) {
+      throw Exception(error.toString());
+    });
+
+    try {
+      saveImages(uploadedImages);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  saveImages(List<ImageModel> images) async {
+    for (var image in images) {
+      try {
+        await saveImage(image);
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
+
+  saveImage(ImageModel image) async {
+    try {
+      await imagesCollection.add(image.toMapForGallery());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<QueryDocumentSnapshot>> getGalleryImages(
+      int docsPerPage, QueryDocumentSnapshot? lastDoc) async {
+    var userId = authService.firebaseAuth.currentUser!.uid;
+    try {
+      var data = lastDoc == null
+          ? await imagesCollection
+              .where('userId', isEqualTo: userId)
+              .orderBy('timestamp', descending: true)
+              .limit(docsPerPage)
+              .get()
+          : await imagesCollection
+              .where('userId', isEqualTo: userId)
+              .orderBy('timestamp', descending: true)
+              .startAfterDocument(lastDoc)
+              .limit(docsPerPage)
+              .get();
+      return data.docs;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void updateUserMarkers(int nNewMarkers) {
+    final DocumentReference userRef =
+        userCollection.doc(authService.firebaseAuth.currentUser!.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      final DocumentSnapshot snapshot = await transaction.get(userRef);
+
+      if (snapshot.exists) {
+        var data = snapshot.data()! as Map<String, dynamic>;
+        int currentMarkers = data['nMarkers'] ?? 0;
+        int newMarkers = currentMarkers + nNewMarkers;
+
+        transaction.update(userRef, {
+          'nMarkers': newMarkers,
+        });
+      }
+    }).catchError((error) {
+      throw Exception(error.toString());
+    });
+  }
+
+  getUserPic(String userId) async {
+    try {
+      var user = await userCollection.doc(userId).get();
+      var data = user.data()! as Map<String, dynamic>;
+      return data['profilePic'];
+    } catch (e) {
+      rethrow;
+    }
   }
 }
