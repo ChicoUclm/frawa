@@ -6,7 +6,7 @@ class HLSService {
   Future<String> createRoom() async {
     final http.Response httpResponse = await http.post(
       Uri.parse("https://api.videosdk.live/v2/rooms"),
-      headers: {'Authorization': Constants.videoStremingApiKey},
+      headers: {'Authorization': Constants.tempStreamingToken},
     );
 
     if (httpResponse.statusCode == 200) {
