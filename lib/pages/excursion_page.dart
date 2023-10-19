@@ -14,7 +14,7 @@ import 'package:excursiona/pages/exc_image_gallery_page.dart';
 import 'package:excursiona/pages/search_participants_page.dart';
 import 'package:excursiona/pages/share_image_page.dart';
 import 'package:excursiona/pages/statistics_page.dart';
-import 'package:excursiona/pages/videostreaming_page.dart';
+import 'package:excursiona/pages/retransmission_page.dart';
 import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
@@ -824,7 +824,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                     onTap: () {
                       nextScreen(
                           context,
-                          VideostreamingPage(
+                          RetransmissionsPage(
                             excursionController: _excursionController!,
                           ),
                           PageTransitionType.rightToLeft);
