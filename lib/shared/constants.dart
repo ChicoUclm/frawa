@@ -29,8 +29,6 @@ class Constants {
   static const String customMarkerText = 'Punto personalizado';
 
   static const String openWeatherMapKey = "cf7d04d95242f493cc2da8f6ea4af65d";
-  static const String videoStremingApiKey =
-      "7cfbbd81-b2d8-4884-808e-2c78543f9c2a";
 
   static const List<BoxShadow> boxShadow = [
     BoxShadow(
