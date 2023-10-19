@@ -14,6 +14,7 @@ import 'package:excursiona/pages/exc_image_gallery_page.dart';
 import 'package:excursiona/pages/search_participants_page.dart';
 import 'package:excursiona/pages/share_image_page.dart';
 import 'package:excursiona/pages/statistics_page.dart';
+import 'package:excursiona/pages/videostreaming_page.dart';
 import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
@@ -84,10 +85,10 @@ class _ExcursionPageState extends State<ExcursionPage> {
   var _mapType = MapType.satellite;
   Set<UserModel> _participants = {};
   Position? _previousPosition;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final DateTime _startTime = DateTime.now();
   Duration _timeElapsed = Duration.zero;
-  Map<String, dynamic> _usersMarkers = {};
+  final Map<String, dynamic> _usersMarkers = {};
 
   @override
   void initState() {
@@ -150,6 +151,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
     Set<Marker> markers = {};
     if (snapshot.hasData) {
       List<MarkerModel> markersData = snapshot.data;
+      // ignore: avoid_function_literals_in_foreach_calls
       markersData.forEach((MarkerModel markerModel) async {
         final markerId = MarkerId(markerModel.id);
         if (markerModel.markerType == MarkerType.participant) {
@@ -469,7 +471,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                 _scaffoldKey.currentState!.openDrawer();
               });
             },
-            child: Icon(Icons.menu_rounded),
+            child: const Icon(Icons.menu_rounded),
           ),
         ),
         Positioned(
@@ -816,9 +818,20 @@ class _ExcursionPageState extends State<ExcursionPage> {
                           ),
                           PageTransitionType.rightToLeft);
                     }),
+                DrawerItem(
+                    title: 'Retransmisiones',
+                    icon: Icons.video_collection_outlined,
+                    onTap: () {
+                      nextScreen(
+                          context,
+                          VideostreamingPage(
+                            excursionController: _excursionController!,
+                          ),
+                          PageTransitionType.rightToLeft);
+                    }),
                 const SizedBox(height: 20),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
+                  padding: const EdgeInsets.symmetric(horizontal: 35),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
@@ -868,7 +881,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 40),
+            padding: const EdgeInsets.only(bottom: 40),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Constants.redColor,
@@ -1161,7 +1174,7 @@ class EmergencyAlertBox extends StatelessWidget {
                   Icons.gps_fixed,
                   size: 28,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   "LOCALIZAR",
                   style: GoogleFonts.inter(
@@ -1182,7 +1195,7 @@ class EmergencyAlertBox extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.forum, color: Colors.white),
+                    const Icon(Icons.forum, color: Colors.white),
                     const SizedBox(width: 5),
                     Text(
                       "Ir al chat",
