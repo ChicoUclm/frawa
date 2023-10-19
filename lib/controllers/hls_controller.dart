@@ -1,0 +1,18 @@
+import 'package:excursiona/controllers/excursion_controller.dart';
+import 'package:excursiona/services/hls_service.dart';
+
+class HLSController {
+  final ExcursionController excursionController;
+  final HLSService _hlsService = HLSService();
+
+  HLSController(this.excursionController);
+  createRoom() async {
+    try {
+      final String roomId = await _hlsService.createRoom();
+      await excursionController.addStreamingRoom(roomId);
+    } catch (e) {
+      throw Exception(
+          'Hubo un error al crear la retransmisión: ${e.toString()}');
+    }
+  }
+}
