@@ -118,12 +118,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
         padding: const EdgeInsets.all(4),
         height: 25,
         width: 25,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
         ),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.blue,
             shape: BoxShape.circle,
           ),
@@ -133,7 +133,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       markerId: const MarkerId('start'),
       position: _userRoute!.startPoint,
       icon: BitmapDescriptor.fromBytes(image),
-      anchor: Offset(0.5, 0.5),
+      anchor: const Offset(0.5, 0.5),
     ));
     markers.add(Marker(
       markerId: const MarkerId('end'),
@@ -261,9 +261,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
               ? IconButton(
                   icon: const Icon(Icons.arrow_forward),
                   onPressed: () async {
-                    if (widget.isNew) {
-                      await _saveExcursion();
-                    }
+                    // if (widget.isNew) {
+                    //   await _saveExcursion();
+                    // }
                     nextScreenReplace(context, const HomePage(),
                         PageTransitionType.rightToLeft);
                   },
@@ -555,10 +555,10 @@ class _MapViewRecapState extends State<MapViewRecap> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.arrow_back),
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
-          onPressed: () => Navigator.pop(context)),
+          onPressed: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back)),
       body: GoogleMap(
         initialCameraPosition: _initialCamera,
         zoomControlsEnabled: false,
