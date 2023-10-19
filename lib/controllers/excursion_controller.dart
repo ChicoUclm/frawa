@@ -19,7 +19,6 @@ import 'package:excursiona/services/chat_service.dart';
 import 'package:excursiona/services/excursion_service.dart';
 import 'package:excursiona/services/storage_service.dart';
 import 'package:excursiona/services/user_service.dart';
-import 'package:excursiona/shared/utils.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +36,7 @@ class ExcursionController {
   Battery battery = Battery();
   RouteModel _route = RouteModel();
 
-  var _lastDocumentFetched = null;
+  var _lastDocumentFetched;
 
   Future createExcursion(
       Excursion excursion, Set<UserModel> participants) async {
@@ -162,7 +161,7 @@ class ExcursionController {
       }
 
       var marker = MarkerModel(
-        id: Uuid().v1(),
+        id: const Uuid().v1(),
         userId: userId!,
         ownerName: userName!,
         ownerPic: userPic!,
@@ -354,10 +353,10 @@ class ExcursionController {
       var docs = await _excursionService.getTLExcursions(
           docsLimit, _lastDocumentFetched);
       List<ExcursionRecap> excursions = [];
-      docs.forEach((doc) {
+      for (var doc in docs) {
         excursions
             .add(ExcursionRecap.fromMap(doc.data()! as Map<String, dynamic>));
-      });
+      }
       excursions.sort((a, b) => b.date.compareTo(a.date));
       _lastDocumentFetched = docs.last;
       return excursions;
@@ -371,5 +370,25 @@ class ExcursionController {
 
   updateUserStatistics(StatisticRecap statistics) async {
     UserService().updateUserStatistics(statistics);
+  }
+
+  addStreamingRoom(String roomId) async {
+    var userInfo = await UserController().getUserBasicInfo();
+    try {
+      await _excursionService.addStreamingRoom(
+          roomId: roomId, excursionId: excursionId!, userId: userInfo.uid);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  deleteStreamingRoom(String roomId) async {
+    var userInfo = await UserController().getUserBasicInfo();
+    try {
+      await _excursionService.deleteStreamingRoom(
+          roomId: roomId, excursionId: excursionId!);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

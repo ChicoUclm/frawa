@@ -8,10 +8,8 @@ import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/model/route.dart';
 import 'package:excursiona/model/user_model.dart';
-import 'package:excursiona/services/notification_service.dart';
 import 'package:excursiona/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ExcursionService {
   final CollectionReference excursionCollection =
@@ -106,7 +104,7 @@ class ExcursionService {
       QuerySnapshot participants =
           await excursion.collection('participants').get();
       return participants.docs;
-    } on FirebaseException catch (e) {
+    } on FirebaseException {
       return [];
     }
   }
@@ -254,7 +252,7 @@ class ExcursionService {
         return images;
       });
     } catch (e) {
-      return Stream.empty();
+      return const Stream.empty();
     }
   }
 
@@ -345,6 +343,34 @@ class ExcursionService {
               .limit(docsPerPage)
               .get();
       return snapshot.docs;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  addStreamingRoom(
+      {required String roomId,
+      required String excursionId,
+      required String userId}) async {
+    try {
+      await excursionCollection
+          .doc(excursionId)
+          .collection('livestreamings')
+          .doc(roomId)
+          .set({'roomId': roomId, 'userId': userId});
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  deleteStreamingRoom(
+      {required String roomId, required String excursionId}) async {
+    try {
+      await excursionCollection
+          .doc(excursionId)
+          .collection('livestreamings')
+          .doc(roomId)
+          .delete();
     } catch (e) {
       rethrow;
     }
