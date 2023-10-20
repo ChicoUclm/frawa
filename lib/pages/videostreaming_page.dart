@@ -1,6 +1,9 @@
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/widgets/loader.dart';
+import 'package:excursiona/widgets/streamer_view.dart';
+import 'package:excursiona/widgets/viewer_view.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:videosdk/videosdk.dart';
 
 class VideoStreamingPage extends StatefulWidget {
@@ -66,46 +69,20 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Panel de retransmisión",
+          style: GoogleFonts.inter(),
+        ),
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: _isJoined
           ? widget.mode == Mode.CONFERENCE
               ? StreamerView(_room)
               : ViewerView(_room)
           : const Loader(),
     );
-  }
-}
-
-class StreamerView extends StatefulWidget {
-  final Room room;
-  const StreamerView(this.room, {super.key});
-
-  @override
-  State<StreamerView> createState() => _StreamerViewState();
-}
-
-class _StreamerViewState extends State<StreamerView> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-            onPressed: () => widget.room.leave(), child: const Text('Terminar'))
-      ],
-    );
-  }
-}
-
-class ViewerView extends StatefulWidget {
-  final Room room;
-  const ViewerView(this.room, {super.key});
-
-  @override
-  State<ViewerView> createState() => _ViewerViewState();
-}
-
-class _ViewerViewState extends State<ViewerView> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
