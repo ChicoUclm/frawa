@@ -9,18 +9,28 @@ import 'package:page_transition/page_transition.dart';
 import 'package:videosdk/videosdk.dart';
 
 class RetransmissionsPage extends StatefulWidget {
-  final ExcursionController excursionController;
   const RetransmissionsPage({super.key, required this.excursionController});
+
+  final ExcursionController excursionController;
 
   @override
   State<RetransmissionsPage> createState() => _RetransmissionsPageState();
 }
 
 class _RetransmissionsPageState extends State<RetransmissionsPage> {
+  String? roomId;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkActiveStreamingRoom();
+  }
+
   _createVideoStreaming() async {
     try {
       final roomId =
-          await HLSController(widget.excursionController).createRoom();
+          await HLSController(excursionController: widget.excursionController)
+              .createRoom();
       nextScreen(
           context,
           VideoStreamingPage(
@@ -35,6 +45,13 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
     }
   }
 
+  void _checkActiveStreamingRoom() async {
+    var roomId = await HLSController().getActiveStreamingRoom();
+    setState(() {
+      this.roomId = roomId;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +61,42 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
           style: GoogleFonts.inter(),
         ),
         foregroundColor: Colors.black,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Constants.darkWhite,
         elevation: 0,
       ),
-      body: Container(),
+      backgroundColor: Constants.darkWhite,
+      body: Column(children: [
+        if (roomId != null)
+          Container(
+            // color: Colors.grey[200],
+            color: Constants.indigoDye,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Tienes una retransmisión activa',
+                      style: TextStyle(color: Colors.white)),
+                  IconButton(
+                    onPressed: () {
+                      nextScreen(
+                          context,
+                          VideoStreamingPage(
+                              roomId: roomId!,
+                              token: Constants.tempStreamingToken,
+                              mode: Mode.CONFERENCE,
+                              excursionController: widget.excursionController),
+                          PageTransitionType.fade);
+                    },
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                    color: Colors.white,
+                    iconSize: 22,
+                  ),
+                ],
+              ),
+            ),
+          )
+      ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Constants.indigoDye,
         onPressed: _createVideoStreaming,
