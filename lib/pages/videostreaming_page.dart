@@ -1,4 +1,5 @@
 import 'package:excursiona/controllers/excursion_controller.dart';
+import 'package:excursiona/enums/hls_states.dart';
 import 'package:excursiona/widgets/loader.dart';
 import 'package:excursiona/widgets/streamer_view.dart';
 import 'package:excursiona/widgets/viewer_view.dart';
@@ -32,22 +33,21 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
         roomId: widget.roomId,
         displayName: 'Directo',
         token: widget.token,
-        mode: widget.mode);
+        mode: widget.mode,
+        defaultCameraIndex: 1);
 
     setMeetingEventListener();
     _room.join();
     super.initState();
   }
 
-  // _closeStreaming() async {
-  //   try {
-  //     await widget.excursionController.deleteStreamingRoom(widget.roomId);
-  //     _room.leave();
-  //   } catch (e) {
-  //     showSnackBar(context, Colors.red,
-  //         'Hubo un error al parar la retransmisión: ${e.toString()}');
-  //   }
-  // }
+  @override
+  void dispose() {
+    if (HLS.fromString(_room.hlsState) == HLS.stopped) {
+      _room.leave();
+    }
+    super.dispose();
+  }
 
   void setMeetingEventListener() {
     _room.on(Events.roomJoined, () {
@@ -58,12 +58,6 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
         _isJoined = true;
       });
     });
-
-    _room.on(Events.roomLeft, () async {
-      if (widget.mode == Mode.CONFERENCE) {
-        await widget.excursionController.deleteStreamingRoom(widget.roomId);
-      }
-    });
   }
 
   @override
@@ -71,7 +65,7 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Panel de retransmisión",
+          "Sala de retransmisión",
           style: GoogleFonts.inter(),
         ),
         foregroundColor: Colors.black,
@@ -80,7 +74,10 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
       ),
       body: _isJoined
           ? widget.mode == Mode.CONFERENCE
-              ? StreamerView(_room)
+              ? StreamerView(
+                  _room,
+                  excursionController: widget.excursionController,
+                )
               : ViewerView(_room)
           : const Loader(),
     );

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/controllers/hls_controller.dart';
 import 'package:excursiona/enums/hls_states.dart';
 import 'package:excursiona/shared/constants.dart';
@@ -9,7 +10,8 @@ import 'package:videosdk/videosdk.dart';
 
 class StreamerView extends StatefulWidget {
   final Room room;
-  const StreamerView(this.room, {super.key});
+  final ExcursionController excursionController;
+  const StreamerView(this.room, {super.key, required this.excursionController});
 
   @override
   State<StreamerView> createState() => _StreamerViewState();
@@ -103,7 +105,8 @@ class _StreamerViewState extends State<StreamerView> {
             // var config = {
 
             // };
-            widget.room.startHls();
+            widget.room.startHls().then((_) =>
+                widget.excursionController.addStreamingRoom(widget.room.id));
             HLSController().setActiveStreamingRoom(widget.room.id);
           },
           style: ElevatedButton.styleFrom(
@@ -120,7 +123,9 @@ class _StreamerViewState extends State<StreamerView> {
       case HLS.playable:
         return ElevatedButton(
             onPressed: () {
-              widget.room.stopHls();
+              widget.room.stopHls().then((value) => widget.excursionController
+                  .deleteStreamingRoom(widget.room.id));
+              HLSController().deleteActiveStreamingRoom();
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Constants.redColor,
