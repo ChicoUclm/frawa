@@ -47,13 +47,17 @@ class _ParticipantStreamingTileState extends State<ParticipantStreamingTile> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: videoStream != null
-          ? RTCVideoView(
-              videoStream?.renderer as RTCVideoRenderer,
-              objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain,
-              filterQuality: FilterQuality.low,
+          ? Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: RTCVideoView(
+                videoStream?.renderer as RTCVideoRenderer,
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              ),
             )
           : Container(
-              color: Colors.grey.shade800,
+              color: Colors.grey,
               child: const Center(
                 child: Icon(
                   Icons.person,
