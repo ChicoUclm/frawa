@@ -89,7 +89,7 @@ class HelperFunctions {
     return prefs.getString(activeStreamingRoom);
   }
 
-  static Future<bool> deleteActiveStreamingRoom(String roomId) async {
+  static Future<bool> deleteActiveStreamingRoom() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.remove(activeStreamingRoom);
   }
