@@ -10,7 +10,6 @@ class HLSController {
   Future<String> createRoom() async {
     try {
       final String roomId = await _hlsService.createRoom();
-      await excursionController!.addStreamingRoom(roomId);
       return roomId;
     } catch (e) {
       throw Exception(
