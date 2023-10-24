@@ -14,7 +14,7 @@ import 'package:screenshot/screenshot.dart';
 class UserController {
   final UserService _userService = UserService();
 
-  var _lastDocumentFetched = null;
+  var _lastDocumentFetched;
 
   Future<UserModel> getUserBasicInfo() async {
     var name = await HelperFunctions.getUserName();
@@ -28,6 +28,15 @@ class UserController {
   Future<UserModel> getUserData() async {
     try {
       return await _userService.getUserData();
+    } catch (e) {
+      throw Exception("Hubo un error al obtener los datos del usuario: $e");
+    }
+  }
+
+  Future<UserModel> getUserDataById(String userId) async {
+    try {
+      var data = await _userService.getUserDataById(userId);
+      return UserModel.fromMap(data);
     } catch (e) {
       throw Exception("Hubo un error al obtener los datos del usuario: $e");
     }
@@ -69,10 +78,10 @@ class UserController {
     try {
       var docs =
           await _userService.getUserExcursions(docsLimit, _lastDocumentFetched);
-      docs.forEach((e) {
+      for (var e in docs) {
         excursions
             .add(ExcursionRecap.fromMap(e.data() as Map<String, dynamic>));
-      });
+      }
       _lastDocumentFetched = docs.last;
       return excursions;
     } catch (e) {
@@ -125,10 +134,10 @@ class UserController {
     try {
       var docs =
           await _userService.getGalleryImages(docsLimit, _lastDocumentFetched);
-      docs.forEach((e) {
+      for (var e in docs) {
         images.add(
             ImageModel.fromMapForGallery(e.data() as Map<String, dynamic>));
-      });
+      }
       _lastDocumentFetched = docs.last;
       return images;
     } catch (e) {
