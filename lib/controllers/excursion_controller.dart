@@ -10,6 +10,7 @@ import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/excursion_participant.dart';
 import 'package:excursiona/model/image_model.dart';
+import 'package:excursiona/model/livestreaming_room.dart';
 import 'package:excursiona/model/route.dart';
 import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/message.dart';
@@ -389,6 +390,22 @@ class ExcursionController {
           roomId: roomId, excursionId: excursionId!);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<List<LiveStreamingRoom>> getStreamingRooms() async {
+    try {
+      return _excursionService.getStreamingRooms(excursionId).then((data) {
+        List<LiveStreamingRoom> streamingRooms = [];
+        for (var doc in data.docs) {
+          streamingRooms.add(
+              LiveStreamingRoom.fromMap(doc.data()! as Map<String, dynamic>));
+        }
+        return streamingRooms;
+      });
+    } catch (e) {
+      throw Exception(
+          'Hubo un error al recuperar las retransmisiones: ${e.toString()}');
     }
   }
 }

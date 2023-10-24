@@ -375,4 +375,15 @@ class ExcursionService {
       rethrow;
     }
   }
+
+  Future<QuerySnapshot> getStreamingRooms(String? excursionId) async {
+    try {
+      return excursionCollection
+          .doc(excursionId)
+          .collection('livestreamings')
+          .get();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
