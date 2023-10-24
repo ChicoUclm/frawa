@@ -11,6 +11,7 @@ import 'package:videosdk/videosdk.dart';
 class StreamerView extends StatefulWidget {
   final Room room;
   final ExcursionController excursionController;
+
   const StreamerView(this.room, {super.key, required this.excursionController});
 
   @override
@@ -48,6 +49,8 @@ class _StreamerViewState extends State<StreamerView> {
     widget.room.on(
       Events.participantJoined,
       (Participant participant) {
+        log('PINNED PARTICIPANTS ${widget.room.pinnedParticipants.entries.length}');
+        log('PARTICIPANTES ${widget.room.participants.entries.length}');
         if (participant.mode == Mode.CONFERENCE) {
           setState(
             () => participants.putIfAbsent(participant.id, () => participant),
@@ -102,10 +105,18 @@ class _StreamerViewState extends State<StreamerView> {
       case HLS.stopped:
         return ElevatedButton(
           onPressed: () {
-            // var config = {
-
-            // };
-            widget.room.startHls().then((_) =>
+            var config = {
+              "layout": {
+                "type": "SPOTLIGHT",
+                "priority": "SPEAKER",
+                "gridSize": 1,
+              },
+              "mode": "video-and-audio",
+              "theme": "DARK",
+              "quality": "high",
+              "orientation": "portrait",
+            };
+            widget.room.startHls(config: config).then((_) =>
                 widget.excursionController.addStreamingRoom(widget.room.id));
             HLSController().setActiveStreamingRoom(widget.room.id);
           },
