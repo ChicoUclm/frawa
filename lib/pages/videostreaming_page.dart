@@ -11,13 +11,14 @@ class VideoStreamingPage extends StatefulWidget {
   final String roomId;
   final String token;
   final Mode mode;
-  final ExcursionController excursionController;
-  const VideoStreamingPage(
-      {super.key,
-      required this.roomId,
-      required this.token,
-      required this.mode,
-      required this.excursionController});
+  final ExcursionController? excursionController;
+  const VideoStreamingPage({
+    super.key,
+    required this.roomId,
+    required this.token,
+    required this.mode,
+    this.excursionController,
+  });
 
   @override
   State<VideoStreamingPage> createState() => _VideoStreamingPageState();
@@ -43,7 +44,8 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
 
   @override
   void dispose() {
-    if (HLS.fromString(_room.hlsState) == HLS.stopped) {
+    if (HLS.fromString(_room.hlsState) == HLS.stopped ||
+        widget.mode == Mode.VIEWER) {
       _room.leave();
     }
     super.dispose();
@@ -74,10 +76,8 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
       ),
       body: _isJoined
           ? widget.mode == Mode.CONFERENCE
-              ? StreamerView(
-                  _room,
-                  excursionController: widget.excursionController,
-                )
+              ? StreamerView(_room,
+                  excursionController: widget.excursionController!)
               : ViewerView(_room)
           : const Loader(),
     );
