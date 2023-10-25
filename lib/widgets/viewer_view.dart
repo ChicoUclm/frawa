@@ -29,21 +29,6 @@ class _ViewerViewState extends State<ViewerView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () => {widget.room.leave()},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text("Leave"),
-                )
-              ],
-            ),
-          ),
           downstreamUrl != null
               ? LivestreamPlayer(downstreamUrl: downstreamUrl!)
               : const Text(
