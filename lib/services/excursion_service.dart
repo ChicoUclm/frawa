@@ -381,6 +381,7 @@ class ExcursionService {
       return excursionCollection
           .doc(excursionId)
           .collection('livestreamings')
+          .where('userId', isNotEqualTo: currentUserId)
           .get();
     } catch (e) {
       rethrow;
