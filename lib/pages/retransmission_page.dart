@@ -103,15 +103,23 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
               ),
             ),
           ),
+        const SizedBox(
+          height: 10,
+        ),
         Expanded(
           child: FutureBuilder(
               future: widget.excursionController.getStreamingRooms(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data!.isEmpty
-                      ? const Center(
-                          child: Text(
-                              'No hay ninguna retransmisión en directo ahora mismo'),
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 26.0),
+                          child: Center(
+                            child: Text(
+                              'No hay ninguna retransmisión en directo ahora mismo',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         )
                       : ListView.builder(
                           itemCount: snapshot.data!.length,
