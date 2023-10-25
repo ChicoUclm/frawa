@@ -14,7 +14,6 @@ import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/widgets/gallery_page_widgets.dart';
 import 'package:excursiona/widgets/loader.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -261,9 +260,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
               ? IconButton(
                   icon: const Icon(Icons.arrow_forward),
                   onPressed: () async {
-                    // if (widget.isNew) {
-                    //   await _saveExcursion();
-                    // }
+                    if (widget.isNew) {
+                      await _saveExcursion();
+                    }
                     nextScreenReplace(context, const HomePage(),
                         PageTransitionType.rightToLeft);
                   },
