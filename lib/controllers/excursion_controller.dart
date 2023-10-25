@@ -384,7 +384,6 @@ class ExcursionController {
   }
 
   deleteStreamingRoom(String roomId) async {
-    var userInfo = await UserController().getUserBasicInfo();
     try {
       await _excursionService.deleteStreamingRoom(
           roomId: roomId, excursionId: excursionId!);
