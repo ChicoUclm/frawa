@@ -21,6 +21,7 @@ class StreamerView extends StatefulWidget {
 class _StreamerViewState extends State<StreamerView> {
   bool micEnabled = true;
   bool camEnabled = true;
+  bool selfieCameraEnabled = false;
   var hlsState = HLS.stopped;
   Map<String, Participant> participants = {};
 
@@ -49,8 +50,6 @@ class _StreamerViewState extends State<StreamerView> {
     widget.room.on(
       Events.participantJoined,
       (Participant participant) {
-        log('PINNED PARTICIPANTS ${widget.room.pinnedParticipants.entries.length}');
-        log('PARTICIPANTES ${widget.room.participants.entries.length}');
         if (participant.mode == Mode.CONFERENCE) {
           setState(
             () => participants.putIfAbsent(participant.id, () => participant),
@@ -58,7 +57,6 @@ class _StreamerViewState extends State<StreamerView> {
         }
       },
     );
-
     widget.room.on(Events.participantLeft, (String participantId) {
       if (participants.containsKey(participantId)) {
         setState(
@@ -85,9 +83,31 @@ class _StreamerViewState extends State<StreamerView> {
           flex: 5,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ParticipantStreamingTile(
-              participant: participants.values.elementAt(0),
-            ),
+            child: Stack(children: [
+              ParticipantStreamingTile(
+                participant: participants.values.elementAt(0),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  onPressed: () {
+                    if (selfieCameraEnabled) {
+                      //selfie -> 0 , back -> 1
+                      widget.room.changeCam(
+                          widget.room.getCameras().elementAt(0).deviceId);
+                      selfieCameraEnabled = false;
+                    } else {
+                      widget.room.changeCam(
+                          widget.room.getCameras().elementAt(1).deviceId);
+                      selfieCameraEnabled = true;
+                    }
+                  },
+                  icon: const Icon(Icons.cameraswitch_outlined),
+                  color: Colors.white,
+                  iconSize: 28,
+                ),
+              )
+            ]),
           ),
         ),
         Flexible(
