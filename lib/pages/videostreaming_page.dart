@@ -30,12 +30,21 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
 
   @override
   void initState() {
-    _room = VideoSDK.createRoom(
-        roomId: widget.roomId,
-        displayName: 'Directo',
-        token: widget.token,
-        mode: widget.mode,
-        defaultCameraIndex: 1);
+    widget.mode == Mode.CONFERENCE
+        ? _room = VideoSDK.createRoom(
+            roomId: widget.roomId,
+            displayName: 'Directo',
+            token: widget.token,
+            mode: widget.mode,
+            defaultCameraIndex: 1,
+            micEnabled: true)
+        : _room = VideoSDK.createRoom(
+            roomId: widget.roomId,
+            displayName: 'Directo',
+            token: widget.token,
+            mode: widget.mode,
+            defaultCameraIndex: 1,
+            micEnabled: false);
 
     setMeetingEventListener();
     _room.join();
