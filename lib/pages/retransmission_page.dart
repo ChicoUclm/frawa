@@ -1,14 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/controllers/hls_controller.dart';
-import 'package:excursiona/controllers/user_controller.dart';
-import 'package:excursiona/model/livestreaming_room.dart';
-import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/pages/videostreaming_page.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/widgets/account_avatar.dart';
 import 'package:excursiona/widgets/loader.dart';
+import 'package:excursiona/widgets/streaming_room_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
@@ -116,13 +112,14 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
                           padding: EdgeInsets.symmetric(horizontal: 26.0),
                           child: Center(
                             child: Text(
-                              'No hay ninguna retransmisión en directo ahora mismo',
+                              'No hay ninguna retransmisión en directo',
                               textAlign: TextAlign.center,
                             ),
                           ),
                         )
                       : ListView.builder(
                           itemCount: snapshot.data!.length,
+                          padding: const EdgeInsets.all(8.0),
                           itemBuilder: (context, index) {
                             var room = snapshot.data![index];
                             return StreamingRoomTile(room);
@@ -139,76 +136,5 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
         child: const Icon(Icons.video_call_rounded),
       ),
     );
-  }
-}
-
-class StreamingRoomTile extends StatefulWidget {
-  final LiveStreamingRoom room;
-  const StreamingRoomTile(this.room, {super.key});
-
-  @override
-  State<StreamingRoomTile> createState() => _StreamingRoomTileState();
-}
-
-class _StreamingRoomTileState extends State<StreamingRoomTile> {
-  late UserModel userInfo;
-  bool _hasLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    UserController().getUserDataById(widget.room.userId).then((userModel) {
-      setState(() {
-        userInfo = userModel;
-        _hasLoaded = true;
-      });
-    }).catchError((e) {
-      showSnackBar(context, Colors.red, e.toString());
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return !_hasLoaded
-        ? Container()
-        : ListTile(
-            leading: userInfo.profilePic == ''
-                ? CircleAvatar(
-                    foregroundColor: Colors.grey,
-                    backgroundColor: Colors.transparent,
-                    radius: 30,
-                    child: AccountAvatar(radius: 30, name: userInfo.name))
-                : CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.transparent,
-                    child: CachedNetworkImage(
-                      imageUrl: userInfo.profilePic,
-                      placeholder: (context, url) => const Loader(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      placeholderFadeInDuration:
-                          const Duration(milliseconds: 300),
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.cover),
-                        ),
-                      ),
-                    ),
-                  ),
-            trailing: IconButton(
-              icon: const Icon(Icons.play_arrow_rounded),
-              onPressed: () => nextScreenReplace(
-                  context,
-                  VideoStreamingPage(
-                    roomId: widget.room.roomId,
-                    token: Constants.tempStreamingToken,
-                    mode: Mode.VIEWER,
-                  ),
-                  PageTransitionType.rightToLeft),
-            ),
-            title: Text(userInfo.name),
-          );
   }
 }
