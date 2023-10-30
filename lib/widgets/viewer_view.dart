@@ -25,17 +25,19 @@ class _ViewerViewState extends State<ViewerView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          downstreamUrl != null
-              ? LivestreamPlayer(downstreamUrl: downstreamUrl!)
-              : const Text(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisSize: MainAxisSize.max,
+      children: [
+        downstreamUrl != null
+            ? LivestreamPlayer(downstreamUrl: downstreamUrl!)
+            : const Center(
+                child: Text(
                   "La retransmisión no está disponible",
                 ),
-        ],
-      ),
+              ),
+      ],
     );
   }
 
