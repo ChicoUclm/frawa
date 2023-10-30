@@ -376,8 +376,8 @@ class ExcursionController {
   addStreamingRoom(String roomId) async {
     var userInfo = await UserController().getUserBasicInfo();
     try {
-      await _excursionService.addStreamingRoom(
-          roomId: roomId, excursionId: excursionId!, userId: userInfo.uid);
+      await _excursionService.addStreamingRoom(LiveStreamingRoom(
+          roomId: roomId, excursionId: excursionId!, userId: userInfo.uid));
     } catch (e) {
       rethrow;
     }

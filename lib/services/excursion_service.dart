@@ -4,6 +4,7 @@ import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/excursion_participant.dart';
 import 'package:excursiona/model/image_model.dart';
+import 'package:excursiona/model/livestreaming_room.dart';
 import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/model/route.dart';
@@ -14,6 +15,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ExcursionService {
   final CollectionReference excursionCollection =
       FirebaseFirestore.instance.collection('excursions');
+
+  final CollectionReference livestreamingsCollection =
+      FirebaseFirestore.instance.collection('livestreamings');
 
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -348,16 +352,11 @@ class ExcursionService {
     }
   }
 
-  addStreamingRoom(
-      {required String roomId,
-      required String excursionId,
-      required String userId}) async {
+  addStreamingRoom(LiveStreamingRoom streamingRoom) async {
     try {
-      await excursionCollection
-          .doc(excursionId)
-          .collection('livestreamings')
-          .doc(roomId)
-          .set({'roomId': roomId, 'userId': userId});
+      await livestreamingsCollection
+          .doc(streamingRoom.roomId)
+          .set(streamingRoom.toMap());
     } catch (e) {
       rethrow;
     }
@@ -366,11 +365,7 @@ class ExcursionService {
   deleteStreamingRoom(
       {required String roomId, required String excursionId}) async {
     try {
-      await excursionCollection
-          .doc(excursionId)
-          .collection('livestreamings')
-          .doc(roomId)
-          .delete();
+      await livestreamingsCollection.doc(roomId).delete();
     } catch (e) {
       rethrow;
     }
@@ -378,11 +373,13 @@ class ExcursionService {
 
   Future<QuerySnapshot> getStreamingRooms(String? excursionId) async {
     try {
-      return excursionCollection
-          .doc(excursionId)
-          .collection('livestreamings')
-          .where('userId', isNotEqualTo: currentUserId)
-          .get();
+      return excursionId != null
+          ? livestreamingsCollection
+              .where('excursionId', isEqualTo: excursionId)
+              .where('userId', isNotEqualTo: currentUserId)
+              .orderBy('userId', descending: true)
+              .get()
+          : livestreamingsCollection.get();
     } catch (e) {
       rethrow;
     }
