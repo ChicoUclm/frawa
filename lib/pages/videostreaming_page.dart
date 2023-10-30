@@ -40,11 +40,11 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
             micEnabled: true)
         : _room = VideoSDK.createRoom(
             roomId: widget.roomId,
-            displayName: 'Directo',
+            displayName: 'Viewer',
             token: widget.token,
             mode: widget.mode,
-            defaultCameraIndex: 1,
-            micEnabled: false);
+            micEnabled: false,
+            camEnabled: false);
 
     setMeetingEventListener();
     _room.join();
