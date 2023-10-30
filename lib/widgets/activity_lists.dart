@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/controllers/user_controller.dart';
+import 'package:excursiona/model/livestreaming_room.dart';
 import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/pages/statistics_page.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/widgets/account_avatar.dart';
 import 'package:excursiona/widgets/loader.dart';
+import 'package:excursiona/widgets/streaming_room_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +25,7 @@ class MyActivity extends StatefulWidget {
 class _MyActivityState extends State<MyActivity> {
   bool _isLoading = true;
   bool _hasMore = true;
-  List<ExcursionRecap> _items = [];
+  final List<ExcursionRecap> _items = [];
   static const int _docsLimit = 10;
   final ScrollController _scrollController = ScrollController();
   final UserController _userController = UserController();
@@ -111,7 +113,7 @@ class CommunityActivity extends StatefulWidget {
 class _CommunityActivityState extends State<CommunityActivity> {
   bool _isLoading = true;
   bool _hasMore = true;
-  List<ExcursionRecap> _items = [];
+  final List<ExcursionRecap> _items = [];
 
   static const int _docsLimit = 10;
   final ScrollController _scrollController = ScrollController();
@@ -217,7 +219,7 @@ class _ActivityItemState extends State<ActivityItem> {
   _getUserPic() async {
     if (!isCurrentUser(widget.item.userId)) {
       UserController().getUserPic(widget.item.userId).then((value) {
-        if (this.mounted) {
+        if (mounted) {
           setState(() {
             _profilePic = value;
           });
@@ -424,7 +426,7 @@ class _ActivityItemState extends State<ActivityItem> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0)),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.open_in_new,
                             color: Constants.indigoDye,
                             size: 20,
@@ -445,5 +447,51 @@ class _ActivityItemState extends State<ActivityItem> {
         ),
       ),
     );
+  }
+}
+
+class LiveStreamings extends StatefulWidget {
+  const LiveStreamings({super.key});
+
+  @override
+  State<LiveStreamings> createState() => _LiveStreamingsState();
+}
+
+class _LiveStreamingsState extends State<LiveStreamings> {
+  List<LiveStreamingRoom> _items = [];
+  bool _isLoading = false;
+  final ExcursionController _excursionController = ExcursionController();
+
+  @override
+  void initState() {
+    super.initState();
+    _getStreamingRooms();
+  }
+
+  _getStreamingRooms() async {
+    var rooms = await _excursionController.getStreamingRooms();
+
+    setState(() {
+      _items = rooms;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading
+        ? const Loader()
+        : _items.isEmpty
+            ? const Center(
+                child: Text('No hay retransmisiones en directo'),
+              )
+            : ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: _items.length,
+                padding: const EdgeInsets.all(8.0),
+                itemBuilder: (context, index) {
+                  return StreamingRoomTile(_items[index], detailed: true);
+                },
+              );
   }
 }
