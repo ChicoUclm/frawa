@@ -32,7 +32,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Column(
             children: [
               TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 splashBorderRadius: BorderRadius.circular(10.0),
                 indicatorWeight: 2.0,
                 indicatorColor: Constants.indigoDye,
