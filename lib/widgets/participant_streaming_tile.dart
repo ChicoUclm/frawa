@@ -14,6 +14,13 @@ class _ParticipantStreamingTileState extends State<ParticipantStreamingTile> {
   Stream? videoStream;
 
   @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     // initialze video stream for the participant if they are present
     widget.participant.streams.forEach((key, Stream stream) {
