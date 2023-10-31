@@ -33,11 +33,12 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
     widget.mode == Mode.CONFERENCE
         ? _room = VideoSDK.createRoom(
             roomId: widget.roomId,
-            displayName: 'Directo',
+            displayName: 'Streamer',
             token: widget.token,
             mode: widget.mode,
-            defaultCameraIndex: 1,
-            micEnabled: true)
+            defaultCameraIndex: 0,
+            micEnabled: true,
+          )
         : _room = VideoSDK.createRoom(
             roomId: widget.roomId,
             displayName: 'Viewer',
