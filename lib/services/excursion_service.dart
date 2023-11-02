@@ -173,14 +173,18 @@ class ExcursionService {
 
   Future<RouteModel> getUserRoute(String excursionId, {String? userId}) async {
     userId ??= currentUserId;
-    return await excursionCollection
-        .doc(excursionId)
-        .collection('routes')
-        .doc(userId)
-        .get()
-        .then((doc) {
-      return RouteModel.fromMap(doc.data()!);
-    });
+    try {
+      return await excursionCollection
+          .doc(excursionId)
+          .collection('routes')
+          .doc(userId)
+          .get()
+          .then((doc) {
+        return RouteModel.fromMap(doc.data()!);
+      });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Stream<List<MarkerModel>> getMarkers(String excursionId) {

@@ -80,7 +80,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
       _isLoading = false;
     });
     if (widget.isNew) {
-      _excursionController.updateUserStatistics(_excursionData!);
+      if (_excursionData != null) {
+        _excursionController.updateUserStatistics(_excursionData!);
+      }
     }
   }
 

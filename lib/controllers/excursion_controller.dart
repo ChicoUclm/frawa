@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
@@ -277,10 +278,14 @@ class ExcursionController {
   }
 
   Future<RouteModel> getUserRoute(String? userId) async {
-    var route =
-        await _excursionService.getUserRoute(excursionId!, userId: userId);
-    _route = route;
-    return route;
+    try {
+      var route =
+          await _excursionService.getUserRoute(excursionId!, userId: userId);
+      _route = route;
+      return route;
+    } catch (e) {
+      throw Exception('Hubo un error al recuperar la ruta: $e');
+    }
   }
 
   Future<StatisticRecap> getExcursionData(String? userId,
@@ -305,6 +310,7 @@ class ExcursionController {
 
       return statistics;
     } catch (e) {
+      log(e.toString());
       throw Exception(
           "Hubo algún error al obtener los datos de la excursión: $e");
     }
