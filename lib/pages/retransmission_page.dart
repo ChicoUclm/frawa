@@ -27,7 +27,6 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
   @override
   void initState() {
     super.initState();
-    _checkActiveStreamingRoom();
   }
 
   _createVideoStreaming() async {
@@ -47,13 +46,6 @@ class _RetransmissionsPageState extends State<RetransmissionsPage> {
       print(e.toString());
       showSnackBar(context, Colors.red, e.toString());
     }
-  }
-
-  void _checkActiveStreamingRoom() async {
-    var roomId = await HLSController().getActiveStreamingRoom();
-    setState(() {
-      this.roomId = roomId;
-    });
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'package:excursiona/controllers/excursion_controller.dart';
-import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/services/hls_service.dart';
 
 class HLSController {
@@ -15,17 +14,5 @@ class HLSController {
       throw Exception(
           'Hubo un error al crear la retransmisión: ${e.toString()}');
     }
-  }
-
-  setActiveStreamingRoom(String roomId) async {
-    await HelperFunctions.setActiveStreamingRoom(roomId);
-  }
-
-  getActiveStreamingRoom() async {
-    return await HelperFunctions.getActiveStreamingRoom();
-  }
-
-  deleteActiveStreamingRoom() async {
-    return await HelperFunctions.deleteActiveStreamingRoom();
   }
 }

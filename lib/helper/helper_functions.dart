@@ -78,19 +78,4 @@ class HelperFunctions {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.clear();
   }
-
-  static Future<bool> setActiveStreamingRoom(String roomId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.setString(activeStreamingRoom, roomId);
-  }
-
-  static Future<String?> getActiveStreamingRoom() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(activeStreamingRoom);
-  }
-
-  static Future<bool> deleteActiveStreamingRoom() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.remove(activeStreamingRoom);
-  }
 }
