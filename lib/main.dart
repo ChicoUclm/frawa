@@ -1,12 +1,14 @@
 import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/pages/auth_page.dart';
 import 'package:excursiona/pages/home_page.dart';
+import 'package:excursiona/pages/states/streamingroom_provider.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,19 +52,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Excursiona',
-          theme: ThemeData(
-            primaryColor: Constants.indigoDye,
-            textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
-          ),
-          home: _isUserLoggedIn ? const HomePage() : const AuthPage(),
-        ));
+    return ChangeNotifierProvider(
+      create: (_) => StreamingRoomProvider(),
+      builder: (context, child) {
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            ),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Excursiona',
+              theme: ThemeData(
+                primaryColor: Constants.indigoDye,
+                textTheme:
+                    GoogleFonts.interTextTheme(Theme.of(context).textTheme),
+              ),
+              home: _isUserLoggedIn ? const HomePage() : const AuthPage(),
+            ));
+      },
+    );
   }
 }

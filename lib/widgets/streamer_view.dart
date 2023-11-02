@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:excursiona/controllers/excursion_controller.dart';
-import 'package:excursiona/controllers/hls_controller.dart';
 import 'package:excursiona/enums/hls_states.dart';
+import 'package:excursiona/pages/states/streamingroom_provider.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/widgets/participant_streaming_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:videosdk/videosdk.dart';
 
 class StreamerView extends StatefulWidget {
@@ -138,7 +139,9 @@ class _StreamerViewState extends State<StreamerView> {
             };
             widget.room.startHls(config: config).then((_) =>
                 widget.excursionController.addStreamingRoom(widget.room.id));
-            HLSController().setActiveStreamingRoom(widget.room.id);
+            // HLSController().setActiveStreamingRoom(widget.room.id);
+            Provider.of<StreamingRoomProvider>(context, listen: false)
+                .saveRoom(widget.room);
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
@@ -156,7 +159,8 @@ class _StreamerViewState extends State<StreamerView> {
             onPressed: () {
               widget.room.stopHls().then((value) => widget.excursionController
                   .deleteStreamingRoom(widget.room.id));
-              HLSController().deleteActiveStreamingRoom();
+              Provider.of<StreamingRoomProvider>(context, listen: false)
+                  .deleteRoom();
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Constants.redColor,

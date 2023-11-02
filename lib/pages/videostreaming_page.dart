@@ -8,16 +8,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:videosdk/videosdk.dart';
 
 class VideoStreamingPage extends StatefulWidget {
-  final String roomId;
+  final String? roomId;
   final String token;
-  final Mode mode;
+  final Mode? mode;
   final ExcursionController? excursionController;
+  final Room? activeRoom;
+
   const VideoStreamingPage({
     super.key,
-    required this.roomId,
+    this.roomId,
     required this.token,
-    required this.mode,
+    this.mode,
     this.excursionController,
+    this.activeRoom,
   });
 
   @override
@@ -30,25 +33,33 @@ class _VideoStreamingPageState extends State<VideoStreamingPage> {
 
   @override
   void initState() {
-    widget.mode == Mode.CONFERENCE
-        ? _room = VideoSDK.createRoom(
-            roomId: widget.roomId,
-            displayName: 'Streamer',
-            token: widget.token,
-            mode: widget.mode,
-            defaultCameraIndex: 0,
-            micEnabled: true,
-          )
-        : _room = VideoSDK.createRoom(
-            roomId: widget.roomId,
-            displayName: 'Viewer',
-            token: widget.token,
-            mode: widget.mode,
-            micEnabled: false,
-            camEnabled: false);
+    if (widget.activeRoom != null) {
+      _room = widget.activeRoom!;
+      setState(() {
+        _isJoined = true;
+      });
+    } else {
+      widget.mode == Mode.CONFERENCE
+          ? _room = VideoSDK.createRoom(
+              roomId: widget.roomId!,
+              displayName: 'Streamer',
+              token: widget.token,
+              mode: widget.mode!,
+              defaultCameraIndex: 0,
+              micEnabled: true,
+            )
+          : _room = VideoSDK.createRoom(
+              roomId: widget.roomId!,
+              displayName: 'Viewer',
+              token: widget.token,
+              mode: widget.mode!,
+              micEnabled: false,
+              camEnabled: false);
 
-    setMeetingEventListener();
-    _room.join();
+      _room.join();
+      setMeetingEventListener();
+    }
+
     super.initState();
   }
 
