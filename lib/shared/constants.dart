@@ -30,7 +30,7 @@ class Constants {
 
   static const String openWeatherMapKey = "cf7d04d95242f493cc2da8f6ea4af65d";
   static const String tempStreamingToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI3Y2ZiYmQ4MS1iMmQ4LTQ4ODQtODA4ZS0yYzc4NTQzZjljMmEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTY5NzcyNzI4NCwiZXhwIjoxNzAwMzE5Mjg0fQ.474clAk-D9lXCian91Ci3lBmvaEnlsTVvZCSTZvA674";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI3Y2ZiYmQ4MS1iMmQ4LTQ4ODQtODA4ZS0yYzc4NTQzZjljMmEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcwMDQ3NzA2OSwiZXhwIjoxODU4MjY1MDY5fQ.4jPZiPv1uLV7D7XL6Sfncu2AO-pqN88P7BJgStfwoqI";
 
   static const List<BoxShadow> boxShadow = [
     BoxShadow(
