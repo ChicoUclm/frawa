@@ -1,7 +1,7 @@
 import 'package:excursiona/helper/helper_functions.dart';
-import 'package:excursiona/pages/auth_page.dart';
-import 'package:excursiona/pages/home_page.dart';
-import 'package:excursiona/pages/states/streamingroom_provider.dart';
+import 'package:excursiona/view/auth_page.dart';
+import 'package:excursiona/view/home_page.dart';
+import 'package:excursiona/view/states/streamingroom_provider.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
