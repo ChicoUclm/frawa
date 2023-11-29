@@ -28,7 +28,7 @@ class UserService {
       QuerySnapshot snapshot =
           await userCollection.where('email', isEqualTo: email).get();
       return snapshot;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
   }
@@ -266,6 +266,16 @@ class UserService {
       var user = await userCollection.doc(userId).get();
       var data = user.data()! as Map<String, dynamic>;
       return data['profilePic'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  getUserDataById(String userId) async {
+    try {
+      var user = await userCollection.doc(userId).get();
+      var data = user.data()! as Map<String, dynamic>;
+      return data;
     } catch (e) {
       rethrow;
     }

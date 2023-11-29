@@ -1,4 +1,3 @@
-import 'package:excursiona/model/excursion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HelperFunctions {
@@ -8,6 +7,7 @@ class HelperFunctions {
   static String profilePicKey = "USERPROFILEPICKEY";
   static String userUIDKey = "USERUIDKEY";
   static String excursionIdKey = "EXCURSIONIDKEY";
+  static String activeStreamingRoom = "ROOMIDKEY";
 
   static Future<bool> saveUserLoggedInStatus(bool isUserLoggedIn) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

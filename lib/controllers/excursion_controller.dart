@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
@@ -10,6 +11,7 @@ import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/excursion_participant.dart';
 import 'package:excursiona/model/image_model.dart';
+import 'package:excursiona/model/livestreaming_room.dart';
 import 'package:excursiona/model/route.dart';
 import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/message.dart';
@@ -19,7 +21,6 @@ import 'package:excursiona/services/chat_service.dart';
 import 'package:excursiona/services/excursion_service.dart';
 import 'package:excursiona/services/storage_service.dart';
 import 'package:excursiona/services/user_service.dart';
-import 'package:excursiona/shared/utils.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +38,7 @@ class ExcursionController {
   Battery battery = Battery();
   RouteModel _route = RouteModel();
 
-  var _lastDocumentFetched = null;
+  var _lastDocumentFetched;
 
   Future createExcursion(
       Excursion excursion, Set<UserModel> participants) async {
@@ -162,7 +163,7 @@ class ExcursionController {
       }
 
       var marker = MarkerModel(
-        id: Uuid().v1(),
+        id: const Uuid().v1(),
         userId: userId!,
         ownerName: userName!,
         ownerPic: userPic!,
@@ -277,10 +278,14 @@ class ExcursionController {
   }
 
   Future<RouteModel> getUserRoute(String? userId) async {
-    var route =
-        await _excursionService.getUserRoute(excursionId!, userId: userId);
-    _route = route;
-    return route;
+    try {
+      var route =
+          await _excursionService.getUserRoute(excursionId!, userId: userId);
+      _route = route;
+      return route;
+    } catch (e) {
+      throw Exception('Hubo un error al recuperar la ruta: $e');
+    }
   }
 
   Future<StatisticRecap> getExcursionData(String? userId,
@@ -305,6 +310,7 @@ class ExcursionController {
 
       return statistics;
     } catch (e) {
+      log(e.toString());
       throw Exception(
           "Hubo algún error al obtener los datos de la excursión: $e");
     }
@@ -354,10 +360,10 @@ class ExcursionController {
       var docs = await _excursionService.getTLExcursions(
           docsLimit, _lastDocumentFetched);
       List<ExcursionRecap> excursions = [];
-      docs.forEach((doc) {
+      for (var doc in docs) {
         excursions
             .add(ExcursionRecap.fromMap(doc.data()! as Map<String, dynamic>));
-      });
+      }
       excursions.sort((a, b) => b.date.compareTo(a.date));
       _lastDocumentFetched = docs.last;
       return excursions;
@@ -371,5 +377,40 @@ class ExcursionController {
 
   updateUserStatistics(StatisticRecap statistics) async {
     UserService().updateUserStatistics(statistics);
+  }
+
+  addStreamingRoom(String roomId) async {
+    var userInfo = await UserController().getUserBasicInfo();
+    try {
+      await _excursionService.addStreamingRoom(LiveStreamingRoom(
+          roomId: roomId, excursionId: excursionId!, userId: userInfo.uid));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  deleteStreamingRoom(String roomId) async {
+    try {
+      await _excursionService.deleteStreamingRoom(
+          roomId: roomId, excursionId: excursionId!);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<LiveStreamingRoom>> getStreamingRooms() async {
+    try {
+      return _excursionService.getStreamingRooms(excursionId).then((data) {
+        List<LiveStreamingRoom> streamingRooms = [];
+        for (var doc in data.docs) {
+          streamingRooms.add(
+              LiveStreamingRoom.fromMap(doc.data()! as Map<String, dynamic>));
+        }
+        return streamingRooms;
+      });
+    } catch (e) {
+      throw Exception(
+          'Hubo un error al recuperar las retransmisiones: ${e.toString()}');
+    }
   }
 }

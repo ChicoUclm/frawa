@@ -4,18 +4,20 @@ import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/excursion_participant.dart';
 import 'package:excursiona/model/image_model.dart';
+import 'package:excursiona/model/livestreaming_room.dart';
 import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/model/route.dart';
 import 'package:excursiona/model/user_model.dart';
-import 'package:excursiona/services/notification_service.dart';
 import 'package:excursiona/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ExcursionService {
   final CollectionReference excursionCollection =
       FirebaseFirestore.instance.collection('excursions');
+
+  final CollectionReference livestreamingsCollection =
+      FirebaseFirestore.instance.collection('livestreamings');
 
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -106,7 +108,7 @@ class ExcursionService {
       QuerySnapshot participants =
           await excursion.collection('participants').get();
       return participants.docs;
-    } on FirebaseException catch (e) {
+    } on FirebaseException {
       return [];
     }
   }
@@ -171,14 +173,18 @@ class ExcursionService {
 
   Future<RouteModel> getUserRoute(String excursionId, {String? userId}) async {
     userId ??= currentUserId;
-    return await excursionCollection
-        .doc(excursionId)
-        .collection('routes')
-        .doc(userId)
-        .get()
-        .then((doc) {
-      return RouteModel.fromMap(doc.data()!);
-    });
+    try {
+      return await excursionCollection
+          .doc(excursionId)
+          .collection('routes')
+          .doc(userId)
+          .get()
+          .then((doc) {
+        return RouteModel.fromMap(doc.data()!);
+      });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Stream<List<MarkerModel>> getMarkers(String excursionId) {
@@ -254,7 +260,7 @@ class ExcursionService {
         return images;
       });
     } catch (e) {
-      return Stream.empty();
+      return const Stream.empty();
     }
   }
 
@@ -345,6 +351,39 @@ class ExcursionService {
               .limit(docsPerPage)
               .get();
       return snapshot.docs;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  addStreamingRoom(LiveStreamingRoom streamingRoom) async {
+    try {
+      await livestreamingsCollection
+          .doc(streamingRoom.roomId)
+          .set(streamingRoom.toMap());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  deleteStreamingRoom(
+      {required String roomId, required String excursionId}) async {
+    try {
+      await livestreamingsCollection.doc(roomId).delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<QuerySnapshot> getStreamingRooms(String? excursionId) async {
+    try {
+      return excursionId != null
+          ? livestreamingsCollection
+              .where('excursionId', isEqualTo: excursionId)
+              .where('userId', isNotEqualTo: currentUserId)
+              .orderBy('userId', descending: true)
+              .get()
+          : livestreamingsCollection.get();
     } catch (e) {
       rethrow;
     }
