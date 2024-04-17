@@ -13,8 +13,8 @@ class MarkerInfoSheet extends StatelessWidget {
   final MarkerModel markerModel;
   const MarkerInfoSheet({
     required this.markerModel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class MarkerInfoSheet extends StatelessWidget {
                               );
                             },
                           ),
-                          const Positioned(
+                          Positioned(
                               bottom: 10,
                               right: 10,
                               child: Icon(MdiIcons.arrowExpandAll,

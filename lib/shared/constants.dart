@@ -19,9 +19,9 @@ class Constants {
   static const Color lightGrey = Color(0xFFE0E0E0);
 
   static const IconData warningMarkerIcon = Icons.warning_rounded;
-  static const IconData restMarkerIcon = MdiIcons.bed;
+  static final IconData restMarkerIcon = MdiIcons.bed;
   static const IconData interestMarkerIcon = Icons.info_rounded;
-  static const IconData customMarkerIcon = MdiIcons.flagVariant;
+  static final IconData customMarkerIcon = MdiIcons.flagVariant;
 
   static const String warningMarkerText = 'Zona de peligro';
   static const String restMarkerText = 'Zona de descanso';

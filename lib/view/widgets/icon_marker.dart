@@ -4,7 +4,7 @@ import 'package:icon_decoration/icon_decoration.dart';
 class IconMarker extends StatelessWidget {
   final IconData icon;
   final Color color;
-  const IconMarker({super.key, required this.icon, required this.color});
+  IconMarker({super.key, required this.icon, required this.color});
 
   @override
   Widget build(BuildContext context) {

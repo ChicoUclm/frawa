@@ -127,16 +127,14 @@ class _HomePageState extends State<HomePage> {
                   onPressed: _createExcursion,
                   foregroundColor: Colors.white,
                   backgroundColor: Constants.indigoDye,
-                  child: Icon(
+                  child: const Icon(
                     Icons.landscape_rounded,
                     size: 40,
                   ),
                 ),
                 label: ""),
-            const BottomNavigationBarItem(
-              icon: Icon(
-                MdiIcons.map,
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(MdiIcons.map),
               label: "Mapa",
             ),
             const BottomNavigationBarItem(

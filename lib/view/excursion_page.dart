@@ -431,27 +431,27 @@ class _ExcursionPageState extends State<ExcursionPage> {
         //     useRotationAnimation: true,
         //     children: [
         //       SpeedDialChild(
-        //         child: const Icon(Constants.customMarkerIcon,
+        //         child: Icon(Constants.customMarkerIcon,
         //             color: Constants.indigoDye, size: 30),
         //         label: Constants.customMarkerText,
         //         onTap: () =>
         //             _showAddMarkerDialog(markerType: MarkerType.custom),
         //       ),
         //       SpeedDialChild(
-        //         child: const Icon(Constants.interestMarkerIcon,
+        //         child: Icon(Constants.interestMarkerIcon,
         //             color: Constants.indigoDye, size: 30),
         //         label: Constants.interestMarkerText,
         //         onTap: () => _showAddMarkerDialog(markerType: MarkerType.info),
         //       ),
         //       SpeedDialChild(
-        //         child: const Icon(Constants.warningMarkerIcon,
+        //         child: Icon(Constants.warningMarkerIcon,
         //             color: Constants.indigoDye, size: 30),
         //         label: Constants.warningMarkerText,
         //         onTap: () =>
         //             _showAddMarkerDialog(markerType: MarkerType.warning),
         //       ),
         //       SpeedDialChild(
-        //         child: const Icon(Constants.restMarkerIcon,
+        //         child: Icon(Constants.restMarkerIcon,
         //             color: Constants.indigoDye, size: 30),
         //         label: Constants.restMarkerText,
         //         onTap: () => _showAddMarkerDialog(markerType: MarkerType.rest),
@@ -625,27 +625,27 @@ class _ExcursionPageState extends State<ExcursionPage> {
     }
 
     screenshotController
-        .captureFromWidget(const IconMarker(
+        .captureFromWidget(IconMarker(
             icon: Constants.warningMarkerIcon,
             color: Constants.warningMarkerColor))
         .then((image) => setState(() {
               _warningMarkerIcon = BitmapDescriptor.fromBytes(image);
             })); // Warning marker
     screenshotController
-        .captureFromWidget(const IconMarker(
+        .captureFromWidget(IconMarker(
             icon: Constants.restMarkerIcon, color: Constants.restMarkerColor))
         .then((image) => setState(() {
               _restMarkerIcon = BitmapDescriptor.fromBytes(image);
             })); // Rest marker
     screenshotController
-        .captureFromWidget(const IconMarker(
+        .captureFromWidget(IconMarker(
             icon: Constants.interestMarkerIcon,
             color: Constants.interestMarkerColor))
         .then((image) => setState(() {
               _interestMarkerIcon = BitmapDescriptor.fromBytes(image);
             })); // Interest marker
     screenshotController
-        .captureFromWidget(const IconMarker(
+        .captureFromWidget(IconMarker(
             icon: Constants.customMarkerIcon,
             color: Constants.customMarkerColor))
         .then((image) => setState(() {
@@ -977,7 +977,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                                                       backgroundColor:
                                                           Constants.redColor,
                                                       padding: const EdgeInsets
-                                                              .symmetric(
+                                                          .symmetric(
                                                           horizontal: 14,
                                                           vertical: 12),
                                                     ),
@@ -1098,7 +1098,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                               //   style: GoogleFonts.inter(
                               //       fontSize: 13, fontWeight: FontWeight.w600),
                               // ),
-                              const Icon(
+                              Icon(
                                 MdiIcons.runFast,
                                 size: 20,
                               ),
@@ -1124,7 +1124,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                               //   style: GoogleFonts.inter(
                               //       fontSize: 13, fontWeight: FontWeight.w600),
                               // ),
-                              const Icon(
+                              Icon(
                                 MdiIcons.mapMarkerDistance,
                                 size: 20,
                               ),
@@ -1150,7 +1150,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                               //   style: GoogleFonts.inter(
                               //       fontSize: 13, fontWeight: FontWeight.w600),
                               // ),
-                              const Icon(
+                              Icon(
                                 MdiIcons.arrowUpDown,
                                 size: 20,
                               ),
@@ -1174,7 +1174,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
               useRotationAnimation: true,
               children: [
                 SpeedDialChild(
-                  child: const Icon(Constants.customMarkerIcon,
+                  child: Icon(Constants.customMarkerIcon,
                       color: Constants.indigoDye, size: 30),
                   label: Constants.customMarkerText,
                   onTap: () =>
@@ -1195,7 +1195,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
                       _showAddMarkerDialog(markerType: MarkerType.warning),
                 ),
                 SpeedDialChild(
-                  child: const Icon(Constants.restMarkerIcon,
+                  child: Icon(Constants.restMarkerIcon,
                       color: Constants.indigoDye, size: 30),
                   label: Constants.restMarkerText,
                   onTap: () =>
@@ -1212,8 +1212,8 @@ class _ExcursionPageState extends State<ExcursionPage> {
 
 class Geolocating extends StatelessWidget {
   const Geolocating({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1236,11 +1236,11 @@ class Geolocating extends StatelessWidget {
                   ),
                 ],
                 borderRadius: BorderRadius.circular(30)),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
+            child: const Padding(
+              padding: EdgeInsets.all(5.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Loader(),
                   SizedBox(width: 15),
                   Text("Geolocalizando...", style: TextStyle(fontSize: 16))
