@@ -16,6 +16,7 @@ class FormButton extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Theme.of(context).secondaryHeaderColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),

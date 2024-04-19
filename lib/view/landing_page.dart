@@ -280,7 +280,6 @@ class _LandingPageState extends State<LandingPage> {
                                               fontWeight: FontWeight.w800,
                                               color: Colors.white),
                                         ),
-                                        const SizedBox(height: 12),
                                         Text(
                                           _weatherDescription.isEmpty
                                               ? _weatherDescription
@@ -292,6 +291,14 @@ class _LandingPageState extends State<LandingPage> {
                                           style: GoogleFonts.inter(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w500,
+                                              color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          formattedDate,
+                                          style: GoogleFonts.inter(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400,
                                               color: Colors.white),
                                         ),
                                       ],
@@ -312,15 +319,6 @@ class _LandingPageState extends State<LandingPage> {
                           ]),
                     ),
                   ),
-          ),
-        ),
-        Positioned(
-          bottom: MediaQuery.of(context).size.height * 0.38,
-          right: 32,
-          child: Text(
-            formattedDate,
-            style: GoogleFonts.inter(
-                fontSize: 18, fontWeight: FontWeight.w400, color: Colors.white),
           ),
         ),
         Positioned.fill(
@@ -477,11 +475,17 @@ class _LandingPageState extends State<LandingPage> {
                                   horizontal: 16, vertical: 16)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Text(
                                 "Tu galería de imágenes",
+                                style: TextStyle(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
                               ),
-                              Icon(Icons.arrow_forward_ios),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
                             ],
                           ),
                         ),

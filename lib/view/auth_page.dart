@@ -145,7 +145,7 @@ class _LandingPageState extends State<AuthPage>
                                 });
                               },
                               indicatorPadding:
-                                  const EdgeInsets.symmetric(horizontal: 40),
+                                  const EdgeInsets.symmetric(horizontal: 0),
                               unselectedLabelColor: Colors.grey[700],
                               labelColor: Colors.black,
                               splashFactory: NoSplash.splashFactory,
@@ -273,12 +273,14 @@ class _LoginTabWidgetState extends State<LoginTabWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextFormField(
+                        autocorrect: false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: textInputDecoration.copyWith(
                           hintText: 'Correo electrónico',
                           prefixIcon: Icon(Icons.email,
                               color: Theme.of(context).primaryColor),
                         ),
+                        keyboardType: TextInputType.emailAddress,
                         onChanged: (value) {
                           setState(() => email = value.trim());
                         },
