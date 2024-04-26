@@ -154,6 +154,8 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                 Form(
                   key: _formKey,
                   child: TextFormField(
+                    autocorrect: false,
+                    textCapitalization: TextCapitalization.sentences,
                     maxLength: 40,
                     decoration: InputDecoration(
                       labelText: "Título de la excursión *",
@@ -193,7 +195,7 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                 ),
                 const SizedBox(height: 15),
                 Container(
-                  height: 140,
+                  height: 145,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                   decoration: BoxDecoration(
@@ -224,9 +226,11 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Text("Nº de participantes: ${_participants.length}",
-                          style: GoogleFonts.inter(
-                              textStyle: const TextStyle(fontSize: 13)))
+                      Text(
+                        "Nº de participantes: ${_participants.length}",
+                        style: GoogleFonts.inter(
+                            textStyle: const TextStyle(fontSize: 13)),
+                      )
                     ],
                   ),
                 ),
@@ -240,9 +244,9 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                             color: Colors.grey,
                             fontSize: 16,
                             fontWeight: FontWeight.w300)),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Constants.indigoDye)),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Constants.indigoDye)),
                   ),
                   onChanged: (value) {

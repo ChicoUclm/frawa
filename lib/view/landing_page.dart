@@ -49,7 +49,7 @@ class _LandingPageState extends State<LandingPage> {
   List<ExcursionRecap> _recentExcursions = [];
 
   String _weatherIcon = "";
-  final String _weatherString = "El tiempo en  ";
+  final String _weatherString = "El tiempo en ";
 
   @override
   void dispose() {

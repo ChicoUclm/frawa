@@ -859,11 +859,21 @@ class _ExcursionPageState extends State<ExcursionPage> {
                       mainAxisSize: MainAxisSize.min,
                       // mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Icon(Icons.exit_to_app_rounded, size: 26),
+                        Icon(
+                          Icons.exit_to_app_rounded,
+                          color: Theme.of(context).secondaryHeaderColor,
+                          size: 26,
+                        ),
                         const SizedBox(width: 10),
-                        Text("Abandonar excursión",
-                            style: GoogleFonts.inter(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
+                        Text(
+                          "Abandonar excursión",
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ).copyWith(
+                            color: Theme.of(context).secondaryHeaderColor,
+                          ),
+                        ),
                       ],
                     ),
                     onPressed: () {
@@ -909,11 +919,21 @@ class _ExcursionPageState extends State<ExcursionPage> {
                 mainAxisSize: MainAxisSize.min,
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Icon(Icons.warning, size: 26),
+                  Icon(
+                    Icons.warning,
+                    color: Theme.of(context).secondaryHeaderColor,
+                    size: 26,
+                  ),
                   const SizedBox(width: 10),
-                  Text("AVISO EMERGENCIA",
-                      style: GoogleFonts.inter(
-                          fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(
+                    "AVISO EMERGENCIA",
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ).copyWith(
+                      color: Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
                 ],
               ),
               onPressed: () {
