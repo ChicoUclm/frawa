@@ -55,8 +55,9 @@ class _ExcursionPageState extends State<ExcursionPage> {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(38.9842, -3.9275), zoom: 5);
 
-  final LocationSettings locationSettings = const LocationSettings(
+  final LocationSettings locationSettings = AppleSettings(
     accuracy: LocationAccuracy.bestForNavigation,
+    allowBackgroundLocationUpdates: true,
     distanceFilter: 10,
   );
 
@@ -296,7 +297,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
       _shareCurrentLocation();
       if (!_isDragging) {
         controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(position!.latitude, position.longitude),
+            target: LatLng(position.latitude, position.longitude),
             zoom: _zoom)));
       }
       _recalculateDistanceAndSpeed();

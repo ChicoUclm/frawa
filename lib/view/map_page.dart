@@ -21,8 +21,9 @@ class _MapPageState extends State<MapPage> {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(38.9842, -3.9275), zoom: 5);
 
-  final LocationSettings locationSettings = const LocationSettings(
+  final LocationSettings locationSettings = AppleSettings(
     accuracy: LocationAccuracy.high,
+    allowBackgroundLocationUpdates: true,
     distanceFilter: 5,
   );
 
