@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/image_model.dart';
@@ -9,7 +8,6 @@ import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/services/excursion_service.dart';
 import 'package:excursiona/services/storage_service.dart';
 import 'package:excursiona/services/user_service.dart';
-import 'package:screenshot/screenshot.dart';
 
 class UserController {
   final UserService _userService = UserService();

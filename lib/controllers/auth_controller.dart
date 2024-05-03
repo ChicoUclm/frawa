@@ -1,19 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/services/auth_service.dart';
-import 'package:excursiona/services/user_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController {
   final AuthService _authService = AuthService();
 
   Future registerWithEmailAndPassword(
       String name, String email, String password) async {
-    HelperFunctions.saveUserEmail(email);
-    HelperFunctions.saveUserName(name);
-    return await _authService.registerWithEmailAndPassword(
-        name, email, password);
+    bool result = false;
+    try {
+      var user = await _authService.registerWithEmailAndPassword(
+          name, email, password);
+      result = false;
+      if (user != null) {
+        result = true;
+        HelperFunctions.saveUserLoggedInStatus(true);
+      }
+
+      HelperFunctions.saveUserEmail(email);
+      HelperFunctions.saveUserName(name);
+      HelperFunctions.saveUserProfilePic(user.get("profilePic"));
+      HelperFunctions.saveUserUID(user.get("uid"));
+    } on FirebaseException catch (e) {
+      return e.message;
+    }
+
+    return result;
   }
 
   Future signInWithEmailAndPassword(String email, String password) async {
@@ -24,15 +38,16 @@ class AuthController {
       HelperFunctions.saveUserName(user.get("name"));
       HelperFunctions.saveUserProfilePic(user.get("profilePic"));
       HelperFunctions.saveUserUID(user.get("uid"));
+
+      result = false;
       if (isEmailVerified()) {
         result = true;
         HelperFunctions.saveUserLoggedInStatus(true);
-      } else {
-        result = false;
       }
     } on FirebaseException catch (e) {
       return e.message;
     }
+
     return result;
   }
 

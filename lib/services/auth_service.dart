@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/model/user_model.dart';
 import 'package:excursiona/services/user_service.dart';
 
@@ -11,21 +10,21 @@ class AuthService {
 
   Future registerWithEmailAndPassword(
       String name, String email, String password) async {
-    bool result = false;
     try {
-      User user = (await firebaseAuth.createUserWithEmailAndPassword(
+      var user = (await firebaseAuth.createUserWithEmailAndPassword(
               email: email, password: password))
-          .user!;
-      var userModel = UserModel(uid: user.uid, name: name, email: email);
+          .user;
+
+      var userModel = UserModel(uid: user!.uid, name: name, email: email);
       await UserService(uid: user.uid).saveUserData(userModel);
+      QuerySnapshot snapshot =
+          await UserService(uid: firebaseAuth.currentUser!.uid)
+              .getUserDataByEmail(email);
       // NotificationService().initializeNotificationService();
-      if (user != null) {
-        result = true;
-      }
+      return snapshot.docs[0];
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
-    return result;
   }
 
   Future signOut() async {
@@ -44,16 +43,14 @@ class AuthService {
 
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      User user = (await firebaseAuth.signInWithEmailAndPassword(
+      User? user = (await firebaseAuth.signInWithEmailAndPassword(
               email: email, password: password))
           .user!;
-      if (user != null) {
-        QuerySnapshot snapshot =
-            await UserService(uid: firebaseAuth.currentUser!.uid)
-                .getUserDataByEmail(email);
-        // NotificationService().initializeNotificationService();
-        return snapshot.docs[0];
-      }
+      QuerySnapshot snapshot =
+          await UserService(uid: firebaseAuth.currentUser!.uid)
+              .getUserDataByEmail(email);
+      // NotificationService().initializeNotificationService();
+      return snapshot.docs[0];
     } on FirebaseException catch (e) {
       rethrow;
     }
