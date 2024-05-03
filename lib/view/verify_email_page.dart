@@ -1,12 +1,12 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+
+import 'package:page_transition/page_transition.dart';
 
 import 'package:excursiona/controllers/auth_controller.dart';
 import 'package:excursiona/view/home_page.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/view/widgets/form_button.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:page_transition/page_transition.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({super.key});
@@ -64,8 +64,9 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
+        title: Text(
           "Verificar email",
+          style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
         ),
       ),
       body: Padding(

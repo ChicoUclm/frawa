@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:excursiona/controllers/auth_controller.dart';
-import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/view/widgets/form_button.dart';
 import 'package:excursiona/view/widgets/loader.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -20,8 +19,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
+        foregroundColor: Theme.of(context).secondaryHeaderColor,
+        title: Text(
           "Recuperar contraseña",
+          style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
         ),
       ),
       body: Padding(

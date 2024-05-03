@@ -1,10 +1,10 @@
-import 'package:excursiona/helper/helper_functions.dart';
-import 'package:excursiona/model/user_model.dart';
-import 'package:excursiona/services/notification_service.dart';
-import 'package:excursiona/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:excursiona/helper/helper_functions.dart';
+import 'package:excursiona/model/user_model.dart';
+import 'package:excursiona/services/user_service.dart';
 
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;

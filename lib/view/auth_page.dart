@@ -1,8 +1,15 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/controllers/auth_controller.dart';
-import 'package:excursiona/view/forgot_password.dart';
+import 'package:excursiona/view/forgot_password_page.dart';
 import 'package:excursiona/view/home_page.dart';
 import 'package:excursiona/view/verify_email_page.dart';
 import 'package:excursiona/services/auth_service.dart';
@@ -10,12 +17,6 @@ import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/view/widgets/form_button.dart';
 import 'package:excursiona/view/widgets/loader.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:page_transition/page_transition.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -439,6 +440,7 @@ class _RegisterTabWidgetState extends State<RegisterTabWidget> {
                           prefixIcon: Icon(Icons.person,
                               color: Theme.of(context).primaryColor),
                         ),
+                        textCapitalization: TextCapitalization.words,
                         onChanged: (value) {
                           setState(() => name = value.trimLeft());
                         },
@@ -458,6 +460,7 @@ class _RegisterTabWidgetState extends State<RegisterTabWidget> {
                           prefixIcon: Icon(Icons.email,
                               color: Theme.of(context).primaryColor),
                         ),
+                        keyboardType: TextInputType.emailAddress,
                         onChanged: (value) {
                           setState(() => email = value.trim());
                         },
