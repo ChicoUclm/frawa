@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -55,11 +56,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(38.9842, -3.9275), zoom: 5);
 
-  final LocationSettings locationSettings = AppleSettings(
-    accuracy: LocationAccuracy.bestForNavigation,
-    allowBackgroundLocationUpdates: true,
-    distanceFilter: 10,
-  );
+  late LocationSettings locationSettings;
 
   StreamSubscription<Position>? _positionStream;
 
@@ -93,12 +90,15 @@ class _ExcursionPageState extends State<ExcursionPage> {
 
   @override
   void initState() {
+    _initLocation();
+
     _excursionController = ExcursionController(excursionId: widget.excursionId);
     _setCustomMarkerIcon();
     _retrieveParticipantsData();
     _initializeDurationTimer();
     _setPositionData();
     _excursionController!.initializeBatteryTimer();
+
     super.initState();
   }
 
@@ -108,6 +108,30 @@ class _ExcursionPageState extends State<ExcursionPage> {
     if (_positionStream != null) _positionStream!.cancel();
     if (_durationTimer != null) _durationTimer!.cancel();
     super.dispose();
+  }
+
+  _initLocation() {
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationText: "",
+          notificationTitle: "",
+          enableWakeLock: true,
+        ),
+      );
+    } else if (Platform.isIOS || Platform.isMacOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        allowBackgroundLocationUpdates: true,
+        distanceFilter: 10,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 10,
+      );
+    }
   }
 
   _setPositionData() {
@@ -297,7 +321,7 @@ class _ExcursionPageState extends State<ExcursionPage> {
       _shareCurrentLocation();
       if (!_isDragging) {
         controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
+            target: LatLng(position!.latitude, position.longitude),
             zoom: _zoom)));
       }
       _recalculateDistanceAndSpeed();

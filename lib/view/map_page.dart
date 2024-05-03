@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/shared/constants.dart';
@@ -21,11 +22,7 @@ class _MapPageState extends State<MapPage> {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(38.9842, -3.9275), zoom: 5);
 
-  final LocationSettings locationSettings = AppleSettings(
-    accuracy: LocationAccuracy.high,
-    allowBackgroundLocationUpdates: true,
-    distanceFilter: 5,
-  );
+  late LocationSettings locationSettings;
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   StreamSubscription<Position>? positionStream;
@@ -48,9 +45,35 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
+    _initLocation();
+
     super.initState();
     _setCustomMarkerIcon();
     _setPositionData();
+  }
+
+  _initLocation() {
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+        accuracy: LocationAccuracy.high,
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationText: "",
+          notificationTitle: "",
+          enableWakeLock: true,
+        ),
+      );
+    } else if (Platform.isIOS || Platform.isMacOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        allowBackgroundLocationUpdates: true,
+        distanceFilter: 5,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 5,
+      );
+    }
   }
 
   _setPositionData() {
@@ -94,6 +117,7 @@ class _MapPageState extends State<MapPage> {
         _setPositionData();
       }
     });
+
     positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position? position) {
@@ -250,8 +274,8 @@ class _MapPageState extends State<MapPage> {
 
 class Geolocating extends StatelessWidget {
   const Geolocating({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -274,11 +298,11 @@ class Geolocating extends StatelessWidget {
                   ),
                 ],
                 borderRadius: BorderRadius.circular(30)),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
+            child: const Padding(
+              padding: EdgeInsets.all(5.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Loader(),
                   SizedBox(width: 15),
                   Text("Geolocalizando...", style: TextStyle(fontSize: 16))
