@@ -195,7 +195,7 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                 ),
                 const SizedBox(height: 15),
                 Container(
-                  height: 145,
+                  height: 150,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                   decoration: BoxDecoration(
@@ -207,8 +207,7 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 90,
+                      Expanded(
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: _participants.length + 1,
