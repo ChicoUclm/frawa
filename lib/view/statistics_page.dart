@@ -254,7 +254,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resumen de la excursión', style: GoogleFonts.inter()),
+        title: Text(
+          'Resumen de la excursión',
+          style: GoogleFonts.inter().copyWith(
+            color: Theme.of(context).secondaryHeaderColor,
+          ),
+        ),
         backgroundColor: Theme.of(context).primaryColor,
         automaticallyImplyLeading: false,
         actions: [
@@ -268,12 +273,22 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     nextScreenReplace(context, const HomePage(),
                         PageTransitionType.rightToLeft);
                   },
+                  style: ButtonStyle(
+                    iconColor: MaterialStateProperty.all(
+                      Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
                 )
               : IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.pop(context);
                   },
+                  style: ButtonStyle(
+                    iconColor: MaterialStateProperty.all(
+                      Theme.of(context).secondaryHeaderColor,
+                    ),
+                  ),
                 ),
         ],
       ),

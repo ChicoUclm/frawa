@@ -534,7 +534,7 @@ class SmallActivityItem extends StatelessWidget {
             boxShadow: Constants.boxShadow),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
-            height: 110,
+            height: 100,
             child: CachedNetworkImage(
                 fit: BoxFit.cover,
                 // width: 100,
