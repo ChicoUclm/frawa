@@ -810,8 +810,10 @@ class _ExcursionPageState extends State<ExcursionPage> {
                       _captureWidgets();
                       _excursionController!.inviteUsersToExcursion(
                           Excursion(
+                            date: widget.excursion.date,
+                            description: widget.excursion.description,
+                            difficulty: widget.excursion.difficulty,
                             id: widget.excursionId,
-                            title: widget.excursion.title,
                             ownerName: _participants
                                 .where((element) => isCurrentUser(element.uid))
                                 .first
@@ -820,9 +822,9 @@ class _ExcursionPageState extends State<ExcursionPage> {
                                 .where((element) => isCurrentUser(element.uid))
                                 .first
                                 .profilePic,
-                            date: widget.excursion.date,
-                            description: widget.excursion.description,
-                            difficulty: widget.excursion.difficulty,
+                            title: widget.excursion.title,
+                            perimeterCenter: widget.excursion.perimeterCenter,
+                            perimeterRadius: widget.excursion.perimeterRadius,
                           ),
                           newParticipants);
                     }),

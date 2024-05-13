@@ -1,14 +1,16 @@
-import 'package:excursiona/helper/helper_functions.dart';
-import 'package:excursiona/view/auth_page.dart';
-import 'package:excursiona/view/home_page.dart';
-import 'package:excursiona/view/states/streamingroom_provider.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import 'package:excursiona/helper/helper_functions.dart';
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/view/auth_page.dart';
+import 'package:excursiona/view/home_page.dart';
+import 'package:excursiona/view/states/streamingroom_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,9 +37,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _askPermissions() async {
-    PermissionStatus storageStatus = await Permission.storage.request();
-    PermissionStatus locationServiceStatus =
-        await Permission.location.request();
+    await Permission.storage.request();
+
+    await Permission.location.request();
   }
 
   void _getIsUserLoggedIn() async {

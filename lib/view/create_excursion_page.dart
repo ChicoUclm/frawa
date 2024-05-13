@@ -1,19 +1,29 @@
-import 'package:excursiona/shared/assets.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/controllers/user_controller.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/user_model.dart';
-import 'package:excursiona/view/excursion_page.dart';
-import 'package:excursiona/view/search_participants_page.dart';
+
+import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
+
+import 'package:excursiona/view/excursion_page.dart';
+import 'package:excursiona/view/perimeter_page.dart';
+import 'package:excursiona/view/search_participants_page.dart';
 import 'package:excursiona/view/widgets/add_participant_avatar.dart';
 import 'package:excursiona/view/widgets/form_button.dart';
 import 'package:excursiona/view/widgets/participant_avatar.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:uuid/uuid.dart';
-import 'package:page_transition/page_transition.dart';
+
+const _minPerimeterRadius = 1.0;
+const _maxPerimeterRadius = 10.0;
 
 class CreateExcursionPage extends StatefulWidget {
   const CreateExcursionPage({super.key});
@@ -32,10 +42,34 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
   final Set<UserModel> _participants = {};
   final UserController _userController = UserController();
 
+  late LatLng? _perimeterCenter;
+  late double _perimeterRadius;
+  final TextEditingController _perimeterRadiusController =
+      TextEditingController();
+  final TextEditingController _perimeterCenterController =
+      TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    _setPositionData();
+    _setPerimeterRadius(_minPerimeterRadius.toInt());
     _initializeParticipants();
+  }
+
+  _setPositionData() {
+    getCurrentPosition().then((value) async {
+      setState(() {
+        _updatePerimeterCenter(LatLng(value.latitude, value.longitude));
+      });
+    }).catchError((error) {
+      showSnackBar(context, Theme.of(context).primaryColor, error.toString());
+    });
+  }
+
+  _setPerimeterRadius(int radius) {
+    _perimeterRadius = radius.toDouble();
+    _updatePerimeterRadius(_minPerimeterRadius);
   }
 
   _initializeParticipants() async {
@@ -101,13 +135,15 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
     _showLoadingDialog();
 
     Excursion excursion = Excursion(
-      ownerName: currentUser!.name,
-      ownerPic: currentUser!.profilePic,
-      id: const Uuid().v4(),
       date: DateTime.now(),
-      title: _excursionName,
       description: _description,
       difficulty: _dropdownValue,
+      id: const Uuid().v4(),
+      ownerName: currentUser!.name,
+      ownerPic: currentUser!.profilePic,
+      perimeterCenter: _perimeterCenter!,
+      perimeterRadius: _perimeterRadius * 100,
+      title: _excursionName,
     );
 
     var result =
@@ -235,6 +271,59 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
                 ),
                 const SizedBox(height: 40),
                 TextField(
+                  controller: _perimeterCenterController,
+                  decoration: InputDecoration(
+                    labelText: "Centro del perímetro",
+                    alignLabelWithHint: true,
+                    labelStyle: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300)),
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Constants.indigoDye)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Constants.indigoDye)),
+                  ),
+                  onTap: () {
+                    if (_perimeterCenter == null) {
+                      return;
+                    }
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PerimeterPage(
+                          initialLocation: _perimeterCenter!,
+                          onLocationSelected: _updatePerimeterCenter,
+                          perimeterRadius: _perimeterRadius * 100,
+                        ),
+                      ),
+                    );
+                  },
+                  readOnly: true,
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _perimeterRadiusController,
+                  decoration: InputDecoration(
+                    labelText: "Radio del perímetro (metros)",
+                    alignLabelWithHint: true,
+                    labelStyle: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300)),
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Constants.indigoDye)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Constants.indigoDye)),
+                  ),
+                  onTap: () => _showNumberPicker(context),
+                  readOnly: true,
+                ),
+                const SizedBox(height: 8),
+                TextField(
                   decoration: InputDecoration(
                     labelText: "Descripción de la excursión",
                     alignLabelWithHint: true,
@@ -300,6 +389,46 @@ class _CreateExcursionPageState extends State<CreateExcursionPage> {
           ),
         ),
       ),
+    );
+  }
+
+  _updatePerimeterCenter(LatLng position) {
+    setState(() {
+      _perimeterCenter = position;
+      _perimeterCenterController.text =
+          "${position.latitude}, ${position.longitude}";
+    });
+  }
+
+  _updatePerimeterRadius(double radius) {
+    _perimeterRadiusController.text = (radius * 100).toInt().toString();
+  }
+
+  _showNumberPicker(BuildContext context) {
+    _updatePerimeterRadius(_minPerimeterRadius);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return SizedBox(
+          height: MediaQuery.of(context).copyWith().size.height / 3,
+          child: CupertinoPicker(
+            itemExtent: 30,
+            onSelectedItemChanged: (int value) {
+              _setPerimeterRadius(value + 1);
+              _updatePerimeterRadius(value + 1);
+            },
+            children: List<Widget>.generate(
+                (_maxPerimeterRadius - _minPerimeterRadius + 1).toInt(),
+                (int index) {
+              return Center(
+                  child: Text(((_minPerimeterRadius + index) * 100)
+                      .toInt()
+                      .toString()));
+            }),
+          ),
+        );
+      },
     );
   }
 }
