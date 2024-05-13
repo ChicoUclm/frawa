@@ -8,8 +8,8 @@ class Excursion {
   final String id;
   final String ownerName;
   final String ownerPic;
-  final LatLng perimeterCenter;
-  final double perimeterRadius;
+  final LatLng? perimeterCenter;
+  final double? perimeterRadius;
   final String title;
 
   Excursion({
@@ -25,20 +25,28 @@ class Excursion {
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    Map<String, dynamic> map = <String, dynamic>{
       'date': date.millisecondsSinceEpoch,
       'description': description,
       'difficulty': difficulty,
       'id': id,
       'ownerName': ownerName,
       'ownerPic': ownerPic,
-      'perimeterCenter': GeoPoint(
-        perimeterCenter.latitude,
-        perimeterCenter.longitude,
-      ),
-      'perimeterRadius': perimeterRadius,
       'title': title,
     };
+
+    if (perimeterCenter != null) {
+      map['perimeterCenter'] = GeoPoint(
+        perimeterCenter!.latitude,
+        perimeterCenter!.longitude,
+      );
+    }
+
+    if (perimeterCenter != null) {
+      map['perimeterRadius'] = perimeterRadius;
+    }
+
+    return map;
   }
 
   Map<String, dynamic> toMapForInvitation() {
