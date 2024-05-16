@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,8 @@ class _MyAppState extends State<MyApp> {
     // initializeFirebaseMessaging();
     _getIsUserLoggedIn();
     _askPermissions();
+
+    HelperFunctions.initLocalNotifications();
   }
 
   void _askPermissions() async {

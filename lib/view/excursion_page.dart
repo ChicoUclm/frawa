@@ -15,19 +15,20 @@ import 'package:screenshot/screenshot.dart';
 import 'package:excursiona/controllers/auth_controller.dart';
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/enums/marker_type.dart';
+import 'package:excursiona/helper/helper_functions.dart';
 import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/user_model.dart';
+import 'package:excursiona/shared/assets.dart';
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/view/chat_room_page.dart';
 import 'package:excursiona/view/exc_image_gallery_page.dart';
 import 'package:excursiona/view/search_participants_page.dart';
 import 'package:excursiona/view/share_image_page.dart';
 import 'package:excursiona/view/statistics_page.dart';
 import 'package:excursiona/view/retransmission_page.dart';
-import 'package:excursiona/shared/assets.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/view/widgets/account_avatar.dart';
 import 'package:excursiona/view/widgets/add_marker_dialog.dart';
 import 'package:excursiona/view/widgets/change_map_type_button.dart';
@@ -53,12 +54,14 @@ class ExcursionPage extends StatefulWidget {
   State<ExcursionPage> createState() => _ExcursionPageState();
 }
 
-class _ExcursionPageState extends State<ExcursionPage> {
+class _ExcursionPageState extends State<ExcursionPage>
+    with WidgetsBindingObserver {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(38.9842, -3.9275), zoom: 5);
 
   late LocationSettings locationSettings;
 
+  StreamSubscription<Position>? _backgroundPositionStream;
   StreamSubscription<Position>? _positionStream;
 
   static const double _tilt = 30;
@@ -101,14 +104,62 @@ class _ExcursionPageState extends State<ExcursionPage> {
     _excursionController!.initializeBatteryTimer();
 
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+
     _excursionController!.batteryTimer!.cancel();
-    if (_positionStream != null) _positionStream!.cancel();
-    if (_durationTimer != null) _durationTimer!.cancel();
+
+    if (_backgroundPositionStream != null) {
+      _backgroundPositionStream!.cancel();
+    }
+
+    if (_positionStream != null) {
+      _positionStream!.cancel();
+    }
+
+    if (_durationTimer != null) {
+      _durationTimer!.cancel();
+    }
+
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // App in Background
+
+      _setBackgroundPositioning();
+    } else if (state == AppLifecycleState.resumed) {
+      // App in Foreground
+
+      _stopBackgroundPositioning();
+    }
+  }
+
+  _setBackgroundPositioning() {
+    _backgroundPositionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      (Position? position) {
+        if (_checkOutsidePerimeter(_currentPosition)) {
+          HelperFunctions.showNotification(
+              'Excursiona', '¡Estás fuera del perímetro, vuelve!');
+        }
+      },
+    );
+  }
+
+  _stopBackgroundPositioning() {
+    if (_backgroundPositionStream == null) {
+      return;
+    }
+
+    _backgroundPositionStream!.pause();
   }
 
   _initLocation() {
@@ -154,6 +205,29 @@ class _ExcursionPageState extends State<ExcursionPage> {
       showSnackBar(context, Theme.of(context).primaryColor, error.toString());
       _finishedLocation = true;
     });
+  }
+
+  _checkOutsidePerimeter(Position? position) {
+    if (position == null) {
+      return false;
+    }
+
+    if (widget.excursion.perimeterCenter == null) {
+      return false;
+    }
+
+    if (widget.excursion.perimeterRadius == null) {
+      return false;
+    }
+
+    double distance = Geolocator.distanceBetween(
+      position.latitude,
+      position.longitude,
+      widget.excursion.perimeterCenter!.latitude,
+      widget.excursion.perimeterCenter!.longitude,
+    );
+
+    return distance > widget.excursion.perimeterRadius!;
   }
 
   Stream<List<MarkerModel>> getMarkers() {

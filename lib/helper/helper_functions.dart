@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HelperFunctions {
@@ -8,6 +9,9 @@ class HelperFunctions {
   static String userUIDKey = "USERUIDKEY";
   static String excursionIdKey = "EXCURSIONIDKEY";
   static String activeStreamingRoom = "ROOMIDKEY";
+
+  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   static Future<bool> saveUserLoggedInStatus(bool isUserLoggedIn) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,5 +81,44 @@ class HelperFunctions {
   static Future<bool> clearSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.clear();
+  }
+
+  static Future initLocalNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    // TODO: Check Permissions Dialog not showing on Android 14
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // TODO: Check Not requesting Permission
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+  }
+
+  static showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      channelDescription: 'channel_description',
+      icon: '@mipmap/ic_launcher',
+      importance: Importance.max,
+      playSound: true,
+      priority: Priority.max,
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
   }
 }
