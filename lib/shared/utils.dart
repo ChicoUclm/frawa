@@ -1,15 +1,15 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/controllers/auth_controller.dart';
-import 'package:excursiona/enums/marker_type.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+import 'package:excursiona/controllers/auth_controller.dart';
+import 'package:excursiona/enums/marker_type.dart';
+import 'package:excursiona/shared/constants.dart';
 
 Future nextScreen(context, page, PageTransitionType animation) {
   return Navigator.push(context, PageTransition(child: page, type: animation));
@@ -110,9 +110,9 @@ bool isCurrentUser(String uid) {
 }
 
 Future<XFile?> pickImageFromCamera() async {
-  final ImagePicker _picker = ImagePicker();
+  final ImagePicker picker = ImagePicker();
 
-  return await _picker.pickImage(source: ImageSource.camera, imageQuality: 65);
+  return await picker.pickImage(source: ImageSource.camera, imageQuality: 65);
 }
 
 void showFullscreenImage(BuildContext context, String imagePath) {

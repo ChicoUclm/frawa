@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -84,12 +86,28 @@ class HelperFunctions {
   }
 
   static Future initLocalNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
+    InitializationSettings? initializationSettings;
 
-    // TODO: Check Permissions Dialog not showing on Android 14
+    if (Platform.isAndroid) {
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('app_icon');
+      initializationSettings =
+          const InitializationSettings(android: initializationSettingsAndroid);
+
+      // TODO: Check Permissions Dialog not showing on Android 14
+    } else if (Platform.isIOS) {
+      const DarwinInitializationSettings initializationSettingsIos =
+          DarwinInitializationSettings(
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
+      initializationSettings =
+          const InitializationSettings(iOS: initializationSettingsIos);
+    }
+
+    if (initializationSettings == null) {
+      return;
+    }
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 

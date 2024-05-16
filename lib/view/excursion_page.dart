@@ -147,6 +147,8 @@ class _ExcursionPageState extends State<ExcursionPage>
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (Position? position) {
         if (_checkOutsidePerimeter(_currentPosition)) {
+          // TODO: Logic to show periodically the notification (?)
+
           HelperFunctions.showNotification(
               'Excursiona', '¡Estás fuera del perímetro, vuelve!');
         }
