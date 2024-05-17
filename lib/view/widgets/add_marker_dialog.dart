@@ -1,15 +1,15 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/enums/marker_type.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 import 'package:excursiona/view/widgets/loader.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class AddMarkerDialog extends StatefulWidget {
   const AddMarkerDialog(

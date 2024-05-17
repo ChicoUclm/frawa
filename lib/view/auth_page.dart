@@ -266,7 +266,11 @@ class _LoginTabWidgetState extends State<LoginTabWidget> {
               physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: 38, right: 38, top: 20, bottom: 5),
+                  left: 38,
+                  right: 38,
+                  top: 20,
+                  bottom: 5,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -353,7 +357,9 @@ class _LoginTabWidgetState extends State<LoginTabWidget> {
                           Buttons.Google,
                           text: "Inicia sesión con Google",
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                            horizontal: 0,
+                            vertical: 5,
+                          ),
                           onPressed: () {
                             _googleSignIn();
                           },
