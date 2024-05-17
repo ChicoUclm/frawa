@@ -42,6 +42,8 @@ class _MyAppState extends State<MyApp> {
     await Permission.storage.request();
 
     await Permission.locationAlways.request();
+
+    await Permission.notification.request();
   }
 
   void _getIsUserLoggedIn() async {
