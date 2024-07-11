@@ -3,10 +3,18 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:excursiona/controllers/user_controller.dart';
+
 import 'package:excursiona/enums/marker_type.dart';
 import 'package:excursiona/enums/message_type.dart';
+
 import 'package:excursiona/helper/helper_functions.dart';
+
 import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/excursion_participant.dart';
@@ -17,14 +25,11 @@ import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/message.dart';
 import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/model/user_model.dart';
+
 import 'package:excursiona/services/chat_service.dart';
 import 'package:excursiona/services/excursion_service.dart';
 import 'package:excursiona/services/storage_service.dart';
 import 'package:excursiona/services/user_service.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
 class ExcursionController {
   ExcursionController({this.excursionId});

@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // initializeFirebaseMessaging();
+
     _getIsUserLoggedIn();
     _askPermissions();
 

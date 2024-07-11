@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:excursiona/shared/constants.dart';
+
 import 'package:http/http.dart' as http;
+
+import 'package:excursiona/shared/constants.dart';
 
 class HLSService {
   Future<String> createRoom() async {

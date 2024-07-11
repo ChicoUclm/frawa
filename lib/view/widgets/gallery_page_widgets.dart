@@ -1,13 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/model/image_model.dart';
-import 'package:excursiona/model/marker_model.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
-import 'package:excursiona/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:excursiona/model/image_model.dart';
+import 'package:excursiona/model/marker_model.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
+
+import 'package:excursiona/view/widgets/account_avatar.dart';
+import 'package:excursiona/view/widgets/loader.dart';
 
 class SharedImageCard extends StatelessWidget {
   final ImageModel data;

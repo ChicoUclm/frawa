@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:excursiona/enums/marker_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:excursiona/enums/marker_type.dart';
 
 class MarkerModel {
   final String id;

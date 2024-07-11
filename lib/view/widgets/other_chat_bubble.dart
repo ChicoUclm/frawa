@@ -1,13 +1,19 @@
-import 'package:audioplayers/audioplayers.dart' as player;
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/enums/message_type.dart';
-import 'package:excursiona/model/message.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
 import 'package:flutter/material.dart';
+
+import 'package:audioplayers/audioplayers.dart' as player;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:excursiona/enums/message_type.dart';
+
+import 'package:excursiona/model/message.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
+
+import 'package:excursiona/view/widgets/account_avatar.dart';
 
 class OtherChatBubble extends StatefulWidget {
   const OtherChatBubble(this.message, {super.key});
@@ -19,7 +25,7 @@ class OtherChatBubble extends StatefulWidget {
 
 class _OtherChatBubbleState extends State<OtherChatBubble> {
   Message get message => widget.message;
-  player.AudioPlayer _audioPlayer = player.AudioPlayer();
+  final player.AudioPlayer _audioPlayer = player.AudioPlayer();
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   bool _isPlayingAudio = false;

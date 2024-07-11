@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import 'package:excursiona/controllers/excursion_controller.dart';
 import 'package:excursiona/controllers/user_controller.dart';
+
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/user_model.dart';
 

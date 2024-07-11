@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+import 'package:videosdk/videosdk.dart';
+
 import 'dart:developer';
 
 import 'package:excursiona/controllers/excursion_controller.dart';
+
 import 'package:excursiona/enums/hls_states.dart';
+
 import 'package:excursiona/view/states/streamingroom_provider.dart';
-import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/view/widgets/participant_streaming_tile.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:videosdk/videosdk.dart';
+
+import 'package:excursiona/shared/constants.dart';
 
 class StreamerView extends StatefulWidget {
   final Room room;

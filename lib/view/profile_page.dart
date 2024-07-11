@@ -1,16 +1,21 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/controllers/auth_controller.dart';
-import 'package:excursiona/controllers/user_controller.dart';
-import 'package:excursiona/model/user_model.dart';
-import 'package:excursiona/view/auth_page.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
-import 'package:excursiona/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'package:excursiona/controllers/auth_controller.dart';
+import 'package:excursiona/controllers/user_controller.dart';
+
+import 'package:excursiona/model/user_model.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
+
+import 'package:excursiona/view/auth_page.dart';
+import 'package:excursiona/view/widgets/account_avatar.dart';
+import 'package:excursiona/view/widgets/loader.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -20,7 +25,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserController _userController = UserController();
+  final UserController _userController = UserController();
   UserModel? _userModel;
   var _profilePic = "";
   bool _isLoading = true;
@@ -179,7 +184,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                               imageUrl: _profilePic,
                                               placeholder: (context, url) =>
                                                   Container(
-                                                      decoration: BoxDecoration(
+                                                      decoration:
+                                                          const BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color:
                                                             Constants.darkWhite,
@@ -213,7 +219,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 35,
                                         child: Center(
                                           child: IconButton(
-                                            icon: Icon(Icons.edit_outlined),
+                                            icon:
+                                                const Icon(Icons.edit_outlined),
                                             onPressed: () {
                                               showModalBottomSheet(
                                                   shape:

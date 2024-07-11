@@ -1,12 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/model/marker_model.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'package:excursiona/model/marker_model.dart';
+
+import 'package:excursiona/shared/constants.dart';
+
+import 'package:excursiona/view/widgets/account_avatar.dart';
 
 class UserMarkerSheet extends StatelessWidget {
   final MarkerModel markerModel;

@@ -1,8 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/model/user_model.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:excursiona/model/user_model.dart';
+
+import 'package:excursiona/shared/constants.dart';
+
+import 'package:excursiona/view/widgets/account_avatar.dart';
 
 class UserMarker extends StatelessWidget {
   const UserMarker({super.key, required this.user});
@@ -28,13 +32,13 @@ class UserMarker extends StatelessWidget {
                   color: Colors.black.withOpacity(0.3),
                   spreadRadius: 1,
                   blurRadius: 5,
-                  offset: Offset(2, 3),
+                  offset: const Offset(2, 3),
                 ),
               ],
             ),
             child: user.profilePic.isEmpty
                 ? MediaQuery(
-                    data: new MediaQueryData(),
+                    data: const MediaQueryData(),
                     child: CircleAvatar(
                       radius: 25,
                       backgroundColor: Colors.white,
@@ -42,7 +46,7 @@ class UserMarker extends StatelessWidget {
                     ),
                   )
                 : MediaQuery(
-                    data: new MediaQueryData(),
+                    data: const MediaQueryData(),
                     child: CircleAvatar(
                         radius: 25,
                         backgroundImage:

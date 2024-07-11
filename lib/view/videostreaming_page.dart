@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+import 'package:videosdk/videosdk.dart';
+
 import 'package:excursiona/controllers/excursion_controller.dart';
+
 import 'package:excursiona/enums/hls_states.dart';
+
 import 'package:excursiona/view/widgets/loader.dart';
 import 'package:excursiona/view/widgets/streamer_view.dart';
 import 'package:excursiona/view/widgets/viewer_view.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:videosdk/videosdk.dart';
 
 class VideoStreamingPage extends StatefulWidget {
   final String? roomId;

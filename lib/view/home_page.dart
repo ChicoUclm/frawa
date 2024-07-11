@@ -1,17 +1,22 @@
+import 'package:flutter/material.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
+
 import 'package:excursiona/controllers/excursion_controller.dart';
+
 import 'package:excursiona/view/create_excursion_page.dart';
 import 'package:excursiona/view/excursion_page.dart';
 import 'package:excursiona/view/landing_page.dart';
 import 'package:excursiona/view/map_page.dart';
 import 'package:excursiona/view/activity_page.dart';
 import 'package:excursiona/view/profile_page.dart';
+
 import 'package:excursiona/services/auth_service.dart';
+
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

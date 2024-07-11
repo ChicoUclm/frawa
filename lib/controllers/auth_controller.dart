@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:excursiona/helper/helper_functions.dart';
+
 import 'package:excursiona/model/user_model.dart';
+
 import 'package:excursiona/services/auth_service.dart';
 
 class AuthController {

@@ -1,11 +1,14 @@
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
+
+import 'package:excursiona/view/widgets/loader.dart';
 
 class BottomChatComponent extends StatefulWidget {
   final Function sendTextMessage;

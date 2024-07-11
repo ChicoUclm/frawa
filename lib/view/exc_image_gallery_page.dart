@@ -1,12 +1,18 @@
+import 'package:flutter/material.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:excursiona/controllers/excursion_controller.dart';
+
 import 'package:excursiona/enums/marker_type.dart';
+
 import 'package:excursiona/model/image_model.dart';
 import 'package:excursiona/model/marker_model.dart';
+
 import 'package:excursiona/shared/constants.dart';
+
 import 'package:excursiona/view/widgets/gallery_page_widgets.dart';
 import 'package:excursiona/view/widgets/loader.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ExcImageGalleryPage extends StatefulWidget {
   final ExcursionController excursionController;

@@ -8,7 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:excursiona/controllers/auth_controller.dart';
+
 import 'package:excursiona/enums/marker_type.dart';
+
 import 'package:excursiona/shared/constants.dart';
 
 Future nextScreen(context, page, PageTransitionType animation) {

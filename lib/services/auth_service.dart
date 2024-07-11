@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:excursiona/model/user_model.dart';
+
 import 'package:excursiona/services/user_service.dart';
 
 class AuthService {
@@ -20,7 +21,7 @@ class AuthService {
       QuerySnapshot snapshot =
           await UserService(uid: firebaseAuth.currentUser!.uid)
               .getUserDataByEmail(email);
-      // NotificationService().initializeNotificationService();
+
       return snapshot.docs[0];
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -33,7 +34,6 @@ class AuthService {
       var isSignedInWithGoogle = await googleSignIn.isSignedIn();
       if (isSignedInWithGoogle) {
         await googleSignIn.signOut();
-        // await googleSignIn.disconnect();
       }
       await firebaseAuth.signOut();
     } on FirebaseAuthException catch (e) {
@@ -49,7 +49,7 @@ class AuthService {
       QuerySnapshot snapshot =
           await UserService(uid: firebaseAuth.currentUser!.uid)
               .getUserDataByEmail(email);
-      // NotificationService().initializeNotificationService();
+
       return snapshot.docs[0];
     } on FirebaseException catch (e) {
       rethrow;
@@ -83,10 +83,8 @@ class AuthService {
       QuerySnapshot snapshot =
           await UserService(uid: firebaseAuth.currentUser!.uid)
               .getUserDataByEmail(user!.email!);
-      // NotificationService().initializeNotificationService();
+
       return snapshot.docs[0];
-      // } on FirebaseAuthException catch (e) {
-      //   return e.message;
     } on FirebaseAuthException catch (e) {
       rethrow;
     }

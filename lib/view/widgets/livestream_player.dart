@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class LivestreamPlayer extends StatefulWidget {
   final String downstreamUrl;
   const LivestreamPlayer({
-    Key? key,
+    super.key,
     required this.downstreamUrl,
-  }) : super(key: key);
+  });
 
   @override
   LivestreamPlayerState createState() => LivestreamPlayerState();

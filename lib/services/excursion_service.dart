@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:excursiona/enums/marker_type.dart';
+
 import 'package:excursiona/model/emergency_alert.dart';
 import 'package:excursiona/model/excursion.dart';
 import 'package:excursiona/model/excursion_participant.dart';
@@ -9,8 +12,8 @@ import 'package:excursiona/model/marker_model.dart';
 import 'package:excursiona/model/recap_models.dart';
 import 'package:excursiona/model/route.dart';
 import 'package:excursiona/model/user_model.dart';
+
 import 'package:excursiona/services/user_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ExcursionService {
   final CollectionReference excursionCollection =
@@ -49,8 +52,6 @@ class ExcursionService {
         if (participant.uid == currentUserId) continue;
         await UserService()
             .insertExcursionInvitation(excursion, participant.uid);
-        // NotificationService()
-        //     .sendExcursionNotificationToUser(excursion, participant.uid);
       }
       return true;
     } on FirebaseException {

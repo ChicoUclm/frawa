@@ -1,14 +1,16 @@
+import 'package:flutter/material.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:excursiona/controllers/user_controller.dart';
+
 import 'package:excursiona/model/user_model.dart';
+
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
+
 import 'package:excursiona/view/widgets/account_avatar.dart';
 import 'package:excursiona/view/widgets/loader.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SearchParticipantsPage extends StatefulWidget {
   final Set<UserModel> alreadyParticipants;

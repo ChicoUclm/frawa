@@ -1,14 +1,18 @@
 import 'dart:io';
-
-import 'package:banner_carousel/banner_carousel.dart';
-import 'package:excursiona/controllers/excursion_controller.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'package:banner_carousel/banner_carousel.dart';
+
+import 'package:excursiona/controllers/excursion_controller.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
+
+import 'package:excursiona/view/widgets/loader.dart';
 
 class ShareImagePage extends StatefulWidget {
   final ExcursionController excursionController;
@@ -125,7 +129,7 @@ class _ShareImagePageState extends State<ShareImagePage> {
                                 top: 0,
                                 right: 0,
                                 child: IconButton(
-                                    icon: Icon(Icons.cancel),
+                                    icon: const Icon(Icons.cancel),
                                     iconSize: 32,
                                     color: Colors.red,
                                     onPressed: () {

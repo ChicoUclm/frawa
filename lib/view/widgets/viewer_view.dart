@@ -1,7 +1,10 @@
-import 'package:excursiona/enums/hls_states.dart';
-import 'package:excursiona/view/widgets/livestream_player.dart';
 import 'package:flutter/material.dart';
+
 import 'package:videosdk/videosdk.dart';
+
+import 'package:excursiona/enums/hls_states.dart';
+
+import 'package:excursiona/view/widgets/livestream_player.dart';
 
 class ViewerView extends StatefulWidget {
   final Room room;

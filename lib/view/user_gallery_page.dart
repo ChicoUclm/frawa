@@ -1,13 +1,16 @@
+import 'package:flutter/material.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:excursiona/controllers/user_controller.dart';
+
 import 'package:excursiona/model/image_model.dart';
+
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
+
 import 'package:excursiona/view/widgets/loader.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class UserGalleryPage extends StatefulWidget {
   const UserGalleryPage({super.key});
@@ -19,7 +22,7 @@ class UserGalleryPage extends StatefulWidget {
 class _UserGalleryPageState extends State<UserGalleryPage> {
   bool _isLoading = true;
   bool _hasMore = true;
-  List<ImageModel> _items = [];
+  final List<ImageModel> _items = [];
   static const int _docsLimit = 20;
   final ScrollController _scrollController = ScrollController();
   final UserController _userController = UserController();

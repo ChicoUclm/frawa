@@ -1,15 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:excursiona/controllers/excursion_controller.dart';
+
 import 'package:excursiona/model/message.dart';
+
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
+
 import 'package:excursiona/view/widgets/bottom_chat_component.dart';
 import 'package:excursiona/view/widgets/loader.dart';
 import 'package:excursiona/view/widgets/my_chat_bubble.dart';
 import 'package:excursiona/view/widgets/other_chat_bubble.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ChatRoomPage extends StatefulWidget {
   final ExcursionController excursionController;

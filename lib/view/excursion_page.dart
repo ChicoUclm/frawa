@@ -534,46 +534,6 @@ class _ExcursionPageState extends State<ExcursionPage>
                 ],
               ),
             )),
-        // Positioned(
-        //   bottom: 16,
-        //   right: 16,
-        //   child: SpeedDial(
-        //     heroTag: 'addMarker',
-        //     backgroundColor: Colors.white,
-        //     foregroundColor: Colors.black,
-        //     icon: MdiIcons.flagVariantPlusOutline,
-        //     activeIcon: Icons.close,
-        //     useRotationAnimation: true,
-        //     children: [
-        //       SpeedDialChild(
-        //         child: Icon(Constants.customMarkerIcon,
-        //             color: Constants.indigoDye, size: 30),
-        //         label: Constants.customMarkerText,
-        //         onTap: () =>
-        //             _showAddMarkerDialog(markerType: MarkerType.custom),
-        //       ),
-        //       SpeedDialChild(
-        //         child: Icon(Constants.interestMarkerIcon,
-        //             color: Constants.indigoDye, size: 30),
-        //         label: Constants.interestMarkerText,
-        //         onTap: () => _showAddMarkerDialog(markerType: MarkerType.info),
-        //       ),
-        //       SpeedDialChild(
-        //         child: Icon(Constants.warningMarkerIcon,
-        //             color: Constants.indigoDye, size: 30),
-        //         label: Constants.warningMarkerText,
-        //         onTap: () =>
-        //             _showAddMarkerDialog(markerType: MarkerType.warning),
-        //       ),
-        //       SpeedDialChild(
-        //         child: Icon(Constants.restMarkerIcon,
-        //             color: Constants.indigoDye, size: 30),
-        //         label: Constants.restMarkerText,
-        //         onTap: () => _showAddMarkerDialog(markerType: MarkerType.rest),
-        //       )
-        //     ],
-        //   ),
-        // ),
         Positioned(
           top: 50,
           left: 16,
@@ -589,101 +549,6 @@ class _ExcursionPageState extends State<ExcursionPage>
             child: const Icon(Icons.menu_rounded),
           ),
         ),
-        // Positioned(
-        //   bottom: 30,
-        //   left: 5,
-        //   child: Container(
-        //     width: MediaQuery.of(context).size.width * 0.75,
-        //     margin: const EdgeInsets.only(right: 14),
-        //     child: SingleChildScrollView(
-        //       physics: const BouncingScrollPhysics(),
-        //       scrollDirection: Axis.horizontal,
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           Container(
-        //             height: 30,
-        //             decoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(5),
-        //               color: Colors.white,
-        //             ),
-        //             padding: const EdgeInsets.symmetric(horizontal: 8),
-        //             child: FittedBox(
-        //                 fit: BoxFit.scaleDown,
-        //                 child: Row(children: [
-        //                   // Text(
-        //                   //   "Vel.: ",
-        //                   //   style: GoogleFonts.inter(
-        //                   //       fontSize: 13, fontWeight: FontWeight.w600),
-        //                   // ),
-        //                   const Icon(
-        //                     MdiIcons.runFast,
-        //                     size: 20,
-        //                   ),
-        //                   Text(
-        //                     "${_currentSpeed.toStringAsFixed(2)} km/h",
-        //                     style: GoogleFonts.inter(fontSize: 13),
-        //                   )
-        //                 ])),
-        //           ),
-        //           Container(
-        //             margin: const EdgeInsets.only(left: 10),
-        //             height: 30,
-        //             decoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(5),
-        //               color: Colors.white,
-        //             ),
-        //             padding: const EdgeInsets.symmetric(horizontal: 8),
-        //             child: FittedBox(
-        //                 fit: BoxFit.scaleDown,
-        //                 child: Row(children: [
-        //                   // Text(
-        //                   //   "Dist.: ",
-        //                   //   style: GoogleFonts.inter(
-        //                   //       fontSize: 13, fontWeight: FontWeight.w600),
-        //                   // ),
-        //                   const Icon(
-        //                     MdiIcons.mapMarkerDistance,
-        //                     size: 20,
-        //                   ),
-        //                   Text(
-        //                     "${_currentDistance.toStringAsFixed(2)} km",
-        //                     style: GoogleFonts.inter(fontSize: 13),
-        //                   )
-        //                 ])),
-        //           ),
-        //           Container(
-        //             margin: const EdgeInsets.only(left: 10),
-        //             height: 30,
-        //             decoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(5),
-        //               color: Colors.white,
-        //             ),
-        //             padding: const EdgeInsets.symmetric(horizontal: 8),
-        //             child: FittedBox(
-        //                 fit: BoxFit.scaleDown,
-        //                 child: Row(children: [
-        //                   // Text(
-        //                   //   "Alt.: ",
-        //                   //   style: GoogleFonts.inter(
-        //                   //       fontSize: 13, fontWeight: FontWeight.w600),
-        //                   // ),
-        //                   const Icon(
-        //                     MdiIcons.arrowUpDown,
-        //                     size: 20,
-        //                   ),
-        //                   Text(
-        //                     "${_currentAlitude.toStringAsFixed(0)} m",
-        //                     style: GoogleFonts.inter(fontSize: 13),
-        //                   )
-        //                 ])),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
         Positioned(
           top: 0,
           child: StreamBuilder(
@@ -1230,11 +1095,6 @@ class _ExcursionPageState extends State<ExcursionPage>
                         child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Row(children: [
-                              // Text(
-                              //   "Vel.: ",
-                              //   style: GoogleFonts.inter(
-                              //       fontSize: 13, fontWeight: FontWeight.w600),
-                              // ),
                               Icon(
                                 MdiIcons.runFast,
                                 size: 20,
@@ -1282,11 +1142,6 @@ class _ExcursionPageState extends State<ExcursionPage>
                         child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Row(children: [
-                              // Text(
-                              //   "Alt.: ",
-                              //   style: GoogleFonts.inter(
-                              //       fontSize: 13, fontWeight: FontWeight.w600),
-                              // ),
                               Icon(
                                 MdiIcons.arrowUpDown,
                                 size: 20,

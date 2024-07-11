@@ -1,10 +1,14 @@
-import 'package:audioplayers/audioplayers.dart' as player;
-import 'package:excursiona/enums/message_type.dart';
-import 'package:excursiona/model/message.dart';
-import 'package:excursiona/shared/constants.dart';
 import 'package:flutter/material.dart';
+
+import 'package:audioplayers/audioplayers.dart' as player;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
+import 'package:excursiona/enums/message_type.dart';
+
+import 'package:excursiona/model/message.dart';
+
+import 'package:excursiona/shared/constants.dart';
 
 class MyChatBubble extends StatefulWidget {
   const MyChatBubble(this.message, {super.key});
@@ -16,7 +20,7 @@ class MyChatBubble extends StatefulWidget {
 
 class _MyChatBubbleState extends State<MyChatBubble> {
   Message get message => widget.message;
-  player.AudioPlayer _audioPlayer = player.AudioPlayer();
+  final player.AudioPlayer _audioPlayer = player.AudioPlayer();
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   bool _isPlayingAudio = false;
@@ -128,7 +132,7 @@ class _MyChatBubbleState extends State<MyChatBubble> {
                                     value: position.inSeconds.toDouble(),
                                     thumbColor: Colors.white,
                                     inactiveColor: Colors.white,
-                                    activeColor: Color(0xFF7EC1FF),
+                                    activeColor: const Color(0xFF7EC1FF),
                                   ),
                                 ),
                               ),

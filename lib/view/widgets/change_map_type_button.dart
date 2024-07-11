@@ -1,6 +1,8 @@
-import 'package:excursiona/shared/constants.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:excursiona/shared/constants.dart';
 
 class MapTypeButton extends StatelessWidget {
   const MapTypeButton(

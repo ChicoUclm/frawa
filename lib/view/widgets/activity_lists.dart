@@ -1,19 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/controllers/excursion_controller.dart';
-import 'package:excursiona/controllers/user_controller.dart';
-import 'package:excursiona/model/livestreaming_room.dart';
-import 'package:excursiona/model/recap_models.dart';
-import 'package:excursiona/view/statistics_page.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
-import 'package:excursiona/view/widgets/loader.dart';
-import 'package:excursiona/view/widgets/streaming_room_tile.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+
+import 'package:excursiona/controllers/excursion_controller.dart';
+import 'package:excursiona/controllers/user_controller.dart';
+
+import 'package:excursiona/model/livestreaming_room.dart';
+import 'package:excursiona/model/recap_models.dart';
+
+import 'package:excursiona/view/statistics_page.dart';
+import 'package:excursiona/view/widgets/account_avatar.dart';
+import 'package:excursiona/view/widgets/loader.dart';
+import 'package:excursiona/view/widgets/streaming_room_tile.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
 
 class MyActivity extends StatefulWidget {
   const MyActivity({super.key});

@@ -1,14 +1,20 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:excursiona/controllers/excursion_controller.dart';
-import 'package:excursiona/controllers/user_controller.dart';
-import 'package:excursiona/model/excursion.dart';
-import 'package:excursiona/view/excursion_page.dart';
-import 'package:excursiona/shared/constants.dart';
-import 'package:excursiona/shared/utils.dart';
-import 'package:excursiona/view/widgets/account_avatar.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:excursiona/controllers/excursion_controller.dart';
+import 'package:excursiona/controllers/user_controller.dart';
+
+import 'package:excursiona/model/excursion.dart';
+
+import 'package:excursiona/view/excursion_page.dart';
+import 'package:excursiona/view/widgets/account_avatar.dart';
+
+import 'package:excursiona/shared/constants.dart';
+import 'package:excursiona/shared/utils.dart';
 
 class ExcursionInvitationCard extends StatelessWidget {
   final Excursion excursion;
