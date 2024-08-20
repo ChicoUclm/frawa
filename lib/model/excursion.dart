@@ -59,16 +59,24 @@ class Excursion {
   }
 
   factory Excursion.fromMap(Map<String, dynamic> map) {
-    return Excursion(
+    var perimeterCenter = map['perimeterCenter'];
+    if (map['perimeterCenter'] is GeoPoint) {
+      perimeterCenter =
+          LatLng(perimeterCenter.latitude, perimeterCenter.longitude);
+    }
+
+    final excursion = Excursion(
       date: DateTime.fromMillisecondsSinceEpoch(map['date']),
       description: map['description'] ?? '',
       difficulty: map['difficulty'] ?? '',
       id: map['id'] ?? '',
       ownerName: map['ownerName'] ?? '',
       ownerPic: map['ownerPic'] ?? '',
-      perimeterCenter: map['perimeterCenter'] ?? '',
-      perimeterRadius: map['perimeterRadius'] ?? '',
+      perimeterCenter: perimeterCenter,
+      perimeterRadius: map['perimeterRadius'],
       title: map['title'] ?? '',
     );
+
+    return excursion;
   }
 }
