@@ -9,9 +9,9 @@ Android and iOS application made with Flutter and Firebase
 - Install Flutter
 
 1. Install Flutter: https://docs.flutter.dev/get-started/install
-2. Set Flutter Version to 3.3.10 by executing the following command:
+2. Set Flutter Version to 3.10.6 by executing the following command:
 ```sh
-flutter downgrade 3.3.10
+cd <path_to_flutter_directory> ; git checkout 3.10.6
 ```
 
 - Set Android environment up
