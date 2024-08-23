@@ -133,6 +133,10 @@ class ExcursionController {
         coords.latitude, coords.longitude, speed, coords.altitude, distance);
   }
 
+  Future<List<MarkerModel>> getAllMarkers() async {
+    return await _excursionService.getAllMarkers();
+  }
+
   Stream<List<MarkerModel>> getMarkers({String? excursionId}) {
     excursionId ??= this.excursionId;
     return _excursionService.getMarkers(excursionId!);

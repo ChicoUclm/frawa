@@ -6,12 +6,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'package:excursiona/controllers/excursion_controller.dart';
+
+import 'package:excursiona/model/marker_model.dart';
+
 import 'package:excursiona/shared/assets.dart';
 import 'package:excursiona/shared/constants.dart';
 import 'package:excursiona/shared/utils.dart';
 
 import 'package:excursiona/view/widgets/change_map_type_button.dart';
 import 'package:excursiona/view/widgets/loader.dart';
+import 'package:excursiona/view/widgets/marker_info_sheet.dart';
+
+const _minimumDistanceForUpdate = 5;
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -26,14 +33,17 @@ class _MapPageState extends State<MapPage> {
 
   late LocationSettings locationSettings;
 
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  Set<Marker> markers = {};
+
   StreamSubscription<Position>? positionStream;
 
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
   static const double _zoom = 19;
+
   BitmapDescriptor _currentLocationIcon = BitmapDescriptor.defaultMarker;
+
   MapType _mapType = MapType.satellite;
   Position? _currentPosition;
   var _finishedLocation = false;
@@ -42,7 +52,10 @@ class _MapPageState extends State<MapPage> {
   @override
   void dispose() {
     super.dispose();
-    if (positionStream != null) positionStream!.cancel();
+
+    if (positionStream != null) {
+      positionStream!.cancel();
+    }
   }
 
   @override
@@ -50,8 +63,33 @@ class _MapPageState extends State<MapPage> {
     _initLocation();
 
     super.initState();
+
+    _setInterestingPointsMarkers();
+
     _setCustomMarkerIcon();
     _setPositionData();
+  }
+
+  _setInterestingPointsMarkers() async {
+    List<MarkerModel> markersData = await ExcursionController().getAllMarkers();
+
+    List<Marker> interestingPointsMarkers = [];
+    for (MarkerModel markerModel in markersData) {
+      interestingPointsMarkers.add(
+        Marker(
+          markerId: MarkerId(markerModel.id),
+          onTap: () => _showMarkerInfo(markerModel),
+          position: LatLng(
+            markerModel.position.latitude,
+            markerModel.position.longitude,
+          ),
+        ),
+      );
+    }
+
+    setState(() {
+      markers.addAll(interestingPointsMarkers);
+    });
   }
 
   _initLocation() {
@@ -68,12 +106,12 @@ class _MapPageState extends State<MapPage> {
       locationSettings = AppleSettings(
         accuracy: LocationAccuracy.high,
         allowBackgroundLocationUpdates: true,
-        distanceFilter: 5,
+        distanceFilter: _minimumDistanceForUpdate,
       );
     } else {
       locationSettings = const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 5,
+        distanceFilter: _minimumDistanceForUpdate,
       );
     }
   }
@@ -109,27 +147,62 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  _showMarkerInfo(MarkerModel markerModel) {
+    _isDragging = true;
+
+    showModalBottomSheet(
+      barrierColor: Colors.black.withOpacity(0.2),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.35,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(15),
+        ),
+      ),
+      elevation: 1,
+      context: context,
+      builder: (context) {
+        return MarkerInfoSheet(markerModel: markerModel);
+      },
+    );
+  }
+
   _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
-    Geolocator.getServiceStatusStream().listen((status) {
-      if (status == ServiceStatus.disabled) {
-        showSnackBar(context, Theme.of(context).primaryColor,
-            'La ubicación no está activada');
-      } else {
-        _setPositionData();
-      }
-    });
+    Geolocator.getServiceStatusStream().listen(
+      (status) {
+        if (status == ServiceStatus.disabled) {
+          showSnackBar(context, Theme.of(context).primaryColor,
+              'La ubicación no está activada');
+        } else {
+          _setPositionData();
+        }
+      },
+    );
 
     positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position? position) {
+      if (position != null && _currentPosition != null) {
+        if (Geolocator.distanceBetween(position.latitude, position.longitude,
+                _currentPosition!.latitude, _currentPosition!.longitude) <
+            _minimumDistanceForUpdate) {
+          return;
+        }
+      }
+
       setState(() {
         _currentPosition = position;
       });
       if (!_isDragging) {
-        controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(position!.latitude, position.longitude),
-            zoom: _zoom)));
+        controller.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+                target: LatLng(position!.latitude, position.longitude),
+                zoom: _zoom),
+          ),
+        );
       }
       _generateLocationMarker();
     });
@@ -144,14 +217,17 @@ class _MapPageState extends State<MapPage> {
     );
 
     setState(() {
-      markers[markerId] = marker;
+      markers.add(marker);
     });
   }
 
   void _changeMapType(MapType mapType) {
-    setState(() {
-      _mapType = mapType;
-    });
+    setState(
+      () {
+        _mapType = mapType;
+      },
+    );
+
     Navigator.pop(context);
   }
 
@@ -196,81 +272,82 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        GoogleMap(
-          initialCameraPosition: initialCameraPosition,
-          markers: Set<Marker>.of(markers.values),
-          mapType: _mapType,
-          onMapCreated: (GoogleMapController controller) =>
-              _onMapCreated(controller),
-          onTap: (LatLng? latLng) {
-            _isDragging = true;
-          },
-          zoomControlsEnabled: false,
-        ),
-        Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FloatingActionButton.small(
-                      heroTag: 'mapType',
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: initialCameraPosition,
+            markers: markers,
+            mapType: _mapType,
+            onMapCreated: (GoogleMapController controller) =>
+                _onMapCreated(controller),
+            onTap: (LatLng? latLng) {
+              _isDragging = true;
+            },
+            zoomControlsEnabled: false,
+          ),
+          Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.small(
+                        heroTag: 'mapType',
+                        backgroundColor: Colors.white,
+                        foregroundColor: Theme.of(context).primaryColor,
+                        tooltip: "Cambiar tipo de mapa",
+                        child: const Icon(
+                          Icons.layers_rounded,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20)),
+                            ),
+                            backgroundColor: Constants.darkWhite,
+                            constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.20),
+                            builder: (context) {
+                              return _buildBottomSheet();
+                            },
+                          );
+                        }),
+                    FloatingActionButton.small(
+                      heroTag: 'centerPosition',
                       backgroundColor: Colors.white,
                       foregroundColor: Theme.of(context).primaryColor,
-                      tooltip: "Cambiar tipo de mapa",
+                      tooltip: "Centrar en mi ubicación",
                       child: const Icon(
-                        Icons.layers_rounded,
+                        Icons.gps_fixed,
                       ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20)),
+                      onPressed: () async {
+                        setState(() {
+                          _isDragging = false;
+                        });
+                        final GoogleMapController controller =
+                            await _controller.future;
+                        controller.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                                target: LatLng(_currentPosition!.latitude,
+                                    _currentPosition!.longitude),
+                                zoom: _zoom),
                           ),
-                          backgroundColor: Constants.darkWhite,
-                          constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.20),
-                          builder: (context) {
-                            return _buildBottomSheet();
-                          },
                         );
-                      }),
-                  FloatingActionButton.small(
-                    heroTag: 'centerPosition',
-                    backgroundColor: Colors.white,
-                    foregroundColor: Theme.of(context).primaryColor,
-                    tooltip: "Centrar en mi ubicación",
-                    child: const Icon(
-                      Icons.gps_fixed,
+                      },
                     ),
-                    onPressed: () async {
-                      setState(() {
-                        _isDragging = false;
-                      });
-                      final GoogleMapController controller =
-                          await _controller.future;
-                      controller.animateCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                              target: LatLng(_currentPosition!.latitude,
-                                  _currentPosition!.longitude),
-                              zoom: _zoom),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            )),
-        if (!_finishedLocation) const Geolocating(),
-      ],
-    ));
+                  ],
+                ),
+              )),
+          if (!_finishedLocation) const Geolocating(),
+        ],
+      ),
+    );
   }
 }
 

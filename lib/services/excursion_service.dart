@@ -188,6 +188,20 @@ class ExcursionService {
     }
   }
 
+  Future<List<MarkerModel>> getAllMarkers() async {
+    return FirebaseFirestore.instance
+        .collectionGroup('markers')
+        .get()
+        .then((value) {
+      List<MarkerModel> markers = [];
+      for (var i in value.docs) {
+        markers.add(MarkerModel.fromMap(i.data()));
+      }
+
+      return markers;
+    });
+  }
+
   Stream<List<MarkerModel>> getMarkers(String excursionId) {
     return excursionCollection
         .doc(excursionId)

@@ -109,7 +109,7 @@ class MarkerInfoSheet extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                markerModel.title!,
+                markerModel.title ?? 'No hay título',
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w500,
                   fontSize: 18,
@@ -165,7 +165,7 @@ class MarkerInfoSheet extends StatelessWidget {
                 ],
               )),
               Text(
-                DateFormat('HH:mm').format(markerModel.timestamp),
+                _getDateTime(),
                 style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -176,5 +176,15 @@ class MarkerInfoSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getDateTime() {
+    if (DateUtils.isSameDay(DateTime.now(), markerModel.timestamp)) {
+      // Less than 24 hours
+
+      return DateFormat('HH:mm').format(markerModel.timestamp);
+    }
+
+    return DateFormat('EEEE, d MMMM yyyy', 'es').format(markerModel.timestamp);
   }
 }
