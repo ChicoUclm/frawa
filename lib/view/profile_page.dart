@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:excursiona/controllers/auth_controller.dart';
@@ -29,11 +30,23 @@ class _ProfilePageState extends State<ProfilePage> {
   UserModel? _userModel;
   var _profilePic = "";
   bool _isLoading = true;
+  String? appVersion;
 
   @override
   void initState() {
     super.initState();
+
     getUserData();
+
+    getAppVersion().then((value) {
+      setState(() {
+        appVersion = value;
+      });
+    });
+  }
+
+  Future<String> getAppVersion() async {
+    return (await PackageInfo.fromPlatform()).version;
   }
 
   getUserData() async {
@@ -150,18 +163,30 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SafeArea(
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                onPressed: () {
-                                  _logout();
-                                },
-                                icon: const Icon(
-                                  Icons.exit_to_app_rounded,
-                                  color: Colors.white,
-                                  size: 28,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 16),
+                                  child: Text(
+                                    appVersion ?? '',
+                                    style: GoogleFonts.inter(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white.withOpacity(0.5)),
+                                  ),
                                 ),
-                              ),
+                                IconButton(
+                                  onPressed: () {
+                                    _logout();
+                                  },
+                                  icon: const Icon(
+                                    Icons.exit_to_app_rounded,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
