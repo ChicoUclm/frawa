@@ -1,28 +1,29 @@
 {
   "project_info": {
     "project_number": "347651667271",
+    "firebase_url": "https://my-flutter-app-373112-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "my-flutter-app-373112",
     "storage_bucket": "my-flutter-app-373112.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:347651667271:android:35b5a5c172d37e39d20862",
+        "mobilesdk_app_id": "1:347651667271:android:61d363f6f2a3a890d20862",
         "android_client_info": {
           "package_name": "com.example.excursiona"
         }
       },
       "oauth_client": [
         {
-          "client_id": "347651667271-ur60kqct9cq5hie2aldp727r6vekkgg4.apps.googleusercontent.com",
+          "client_id": "347651667271-54j6u38eusv6aoi5jdn4ucqggi71fq82.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.excursiona",
-            "certificate_hash": "d9b084e32c402e8de5d86d643ed58ad0161f278d"
+            "certificate_hash": "1ee95975505138ae702493115ead7d42d00297aa"
           }
         },
         {
-          "client_id": "347651667271-kijvpajomajssna88tnci9repd3vgcal.apps.googleusercontent.com",
+          "client_id": "347651667271-u3g46ku4rdgmjbm8bq28nfovivp9b8gh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,8 +36,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "347651667271-kijvpajomajssna88tnci9repd3vgcal.apps.googleusercontent.com",
+              "client_id": "347651667271-u3g46ku4rdgmjbm8bq28nfovivp9b8gh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "347651667271-d0iggs9hvd6sa8fghftkmtk1glb7fgu9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.excursiona"
+              }
             }
           ]
         }
