@@ -121,7 +121,7 @@ class MarkerInfoSheet extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Coordenadas: ${markerModel.position.latitude}${markerModel.position.longitude}",
+                "Coordenadas: ${markerModel.position.latitude}, ${markerModel.position.longitude}",
                 style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w300,
